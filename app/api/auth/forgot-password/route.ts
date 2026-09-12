@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
 import { forgotPasswordSchema } from "@/lib/auth/schemas"
-import { requestPasswordReset } from "@/lib/auth/service"
+import { requestPasswordReset } from "@/lib/services/auth.service"
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null)

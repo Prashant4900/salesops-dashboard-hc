@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 
 import { loginSchema } from "@/lib/auth/schemas"
-import { AuthError, authenticateUser } from "@/lib/auth/service"
+import { AuthError, authenticateUser } from "@/lib/services/auth.service"
 import { setSessionCookie } from "@/lib/auth/session"
 
 export async function POST(request: Request) {

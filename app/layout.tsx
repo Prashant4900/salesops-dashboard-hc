@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import { DM_Sans, JetBrains_Mono } from "next/font/google"
 import type React from "react"
 import "./globals.css"
-import { Providers } from "@/components/providers"
+import { Providers } from "@/lib/store/providers"
 import { ThemeProvider } from "@/components/theme-provider"
 
 const _dmSans = DM_Sans({

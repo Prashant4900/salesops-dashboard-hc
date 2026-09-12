@@ -6,19 +6,16 @@ import { usePathname } from "next/navigation"
 import type { Section } from "@/lib/dashboard-config"
 import { navItems } from "@/lib/dashboard-config"
 import { cn } from "@/lib/utils"
+import { useAppStore } from "@/lib/store/use-app-store"
 
 interface SidebarProps {
   activeSection: Section
-  collapsed: boolean
-  onCollapsedChange: (collapsed: boolean) => void
 }
 
-export function Sidebar({
-  activeSection: _,
-  collapsed,
-  onCollapsedChange,
-}: SidebarProps) {
+export function Sidebar({ activeSection: _ }: SidebarProps) {
   const pathname = usePathname()
+  const { isSidebarOpen, toggleSidebar } = useAppStore()
+  const collapsed = !isSidebarOpen
 
   return (
     <aside
@@ -91,7 +88,7 @@ export function Sidebar({
       <div className="p-3 border-t border-sidebar-border">
         <button
           type="button"
-          onClick={() => onCollapsedChange(!collapsed)}
+          onClick={toggleSidebar}
           className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-all duration-200"
         >
           {collapsed ? (

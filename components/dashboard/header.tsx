@@ -4,6 +4,7 @@ import { Bell, Calendar, Moon, Search, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { type Section, sectionTitles } from "@/lib/dashboard-config"
+import { useSession, useLogout } from "@/hooks/use-auth"
 import { cn } from "@/lib/utils"
 
 interface HeaderProps {
@@ -14,10 +15,15 @@ export function Header({ activeSection }: HeaderProps) {
   const [searchFocused, setSearchFocused] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { resolvedTheme, setTheme } = useTheme()
+  const { data: user } = useSession()
+  const logout = useLogout()
 
   useEffect(() => setMounted(true), [])
 
   const isDark = resolvedTheme === "dark"
+  const initials = user?.name 
+    ? user.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2)
+    : user?.email.substring(0, 2).toUpperCase() || "JD"
 
   return (
     <header className="h-16 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30 flex items-center justify-between px-6">
@@ -73,13 +79,15 @@ export function Header({ activeSection }: HeaderProps) {
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full animate-pulse" />
         </button>
 
-        {/* User avatar */}
+        {/* User avatar & Logout */}
         <button
           type="button"
+          onClick={() => logout.mutate()}
+          title="Click to logout"
           className="w-9 h-9 rounded-lg overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 transition-all duration-200"
         >
           <div className="w-full h-full bg-gradient-to-br from-accent/80 to-chart-1 flex items-center justify-center text-xs font-semibold text-accent-foreground">
-            JD
+            {initials}
           </div>
         </button>
       </div>

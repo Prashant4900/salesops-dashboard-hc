@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Header } from "@/components/dashboard/header"
 import { Sidebar } from "@/components/dashboard/sidebar"
 import type { Section } from "@/lib/dashboard-config"
+import { useAppStore } from "@/lib/store/use-app-store"
 
 interface DashboardShellProps {
   children: React.ReactNode
@@ -13,18 +14,14 @@ interface DashboardShellProps {
 export function DashboardShell({ children }: DashboardShellProps) {
   const pathname = usePathname()
   const activeSection = (pathname.split("/")[1] || "overview") as Section
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const { isSidebarOpen } = useAppStore()
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar
-        activeSection={activeSection}
-        collapsed={sidebarCollapsed}
-        onCollapsedChange={setSidebarCollapsed}
-      />
+      <Sidebar activeSection={activeSection} />
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ease-out ${
-          sidebarCollapsed ? "ml-[72px]" : "ml-[260px]"
+          !isSidebarOpen ? "ml-[72px]" : "ml-[260px]"
         }`}
       >
         <Header activeSection={activeSection} />

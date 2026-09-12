@@ -20,7 +20,7 @@ import {
   useLogin,
   useRegister,
   useResetPassword,
-} from "@/lib/client/auth-hooks"
+} from "@/hooks/use-auth"
 
 const inputClass =
   "h-12 border-border bg-card/60 px-4 text-sm placeholder:text-muted-foreground/60"

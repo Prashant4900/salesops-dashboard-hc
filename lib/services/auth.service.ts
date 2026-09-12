@@ -10,35 +10,30 @@ import type {
   ResetPasswordInput,
 } from "@/lib/auth/schemas"
 import type { Role } from "@/lib/generated/prisma/enums"
-import { prisma } from "@/lib/prisma"
+import { userRepo } from "@/lib/repos/user.repo"
+import { tokenRepo } from "@/lib/repos/token.repo"
 
 export class AuthError extends Error {}
 
 const HASH_ROUNDS = 12
 
 export async function registerUser(input: RegisterInput) {
-  const existing = await prisma.user.findUnique({
-    where: { email: input.email.toLowerCase() },
-  })
+  const existing = await userRepo.findByEmail(input.email)
   if (existing)
     throw new AuthError("An account with this email already exists.")
 
   const passwordHash = await bcrypt.hash(input.password, HASH_ROUNDS)
-  const user = await prisma.user.create({
-    data: {
-      name: input.name,
-      email: input.email.toLowerCase(),
-      password: passwordHash,
-      role: "STAFF" as Role,
-    },
+  const user = await userRepo.create({
+    name: input.name,
+    email: input.email.toLowerCase(),
+    password: passwordHash,
+    role: "STAFF" as Role,
   })
   return { id: user.id, name: user.name, email: user.email, role: user.role }
 }
 
 export async function authenticateUser(input: LoginInput) {
-  const user = await prisma.user.findUnique({
-    where: { email: input.email.toLowerCase() },
-  })
+  const user = await userRepo.findByEmail(input.email)
   if (!user) throw new AuthError("Invalid email or password.")
 
   const valid = await bcrypt.compare(input.password, user.password)
@@ -48,41 +43,26 @@ export async function authenticateUser(input: LoginInput) {
 }
 
 export async function requestPasswordReset(input: ForgotPasswordInput) {
-  const user = await prisma.user.findUnique({
-    where: { email: input.email.toLowerCase() },
-  })
+  const user = await userRepo.findByEmail(input.email)
   // Same response either way to avoid leaking which emails exist.
   if (!user) return { sent: true }
 
   const token = randomBytes(32).toString("hex")
-  await prisma.passwordResetToken.create({
-    data: {
-      token,
-      userId: user.id,
-      expiresAt: addHours(new Date(), 1),
-    },
+  await tokenRepo.create({
+    token,
+    user: { connect: { id: user.id } },
+    expiresAt: addHours(new Date(), 1),
   })
   // Email delivery is out of scope here; the token is returned for dev/testing.
   return { sent: true, token }
 }
 
 export async function resetPassword(input: ResetPasswordInput) {
-  const record = await prisma.passwordResetToken.findUnique({
-    where: { token: input.token },
-  })
+  const record = await tokenRepo.findByToken(input.token)
   if (!record || record.expiresAt < new Date() || record.usedAt)
     throw new AuthError("This reset link is invalid or has expired.")
 
   const passwordHash = await bcrypt.hash(input.password, HASH_ROUNDS)
-  await prisma.$transaction([
-    prisma.user.update({
-      where: { id: record.userId },
-      data: { password: passwordHash },
-    }),
-    prisma.passwordResetToken.update({
-      where: { token: input.token },
-      data: { usedAt: new Date() },
-    }),
-  ])
+  await tokenRepo.executeResetTransaction(record.userId, passwordHash, input.token)
   return { ok: true }
 }
