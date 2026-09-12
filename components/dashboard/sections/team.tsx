@@ -1,38 +1,101 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils";
-import { Trophy, Target, TrendingUp, TrendingDown, Mail, Phone, MoreHorizontal } from "lucide-react";
 import {
-  BarChart,
+  Mail,
+  MoreHorizontal,
+  Phone,
+  Target,
+  TrendingDown,
+  TrendingUp,
+  Trophy,
+} from "lucide-react"
+import { useEffect, useState } from "react"
+import {
   Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+} from "recharts"
+import { cn } from "@/lib/utils"
 
 interface TeamMember {
-  id: string;
-  name: string;
-  role: string;
-  email: string;
-  avatar: string;
-  deals: number;
-  revenue: number;
-  quota: number;
-  change: number;
-  rank: number;
+  id: string
+  name: string
+  role: string
+  email: string
+  avatar: string
+  deals: number
+  revenue: number
+  quota: number
+  change: number
+  rank: number
 }
 
 const teamMembers: TeamMember[] = [
-  { id: "1", name: "Sarah Chen", role: "Senior AE", email: "sarah@company.com", avatar: "SC", deals: 24, revenue: 487500, quota: 450000, change: 15, rank: 1 },
-  { id: "2", name: "Mike Johnson", role: "Account Executive", email: "mike@company.com", avatar: "MJ", deals: 19, revenue: 356200, quota: 400000, change: 8, rank: 2 },
-  { id: "3", name: "Emily Davis", role: "Senior AE", email: "emily@company.com", avatar: "ED", deals: 17, revenue: 312800, quota: 350000, change: 12, rank: 3 },
-  { id: "4", name: "James Wilson", role: "Account Executive", email: "james@company.com", avatar: "JW", deals: 15, revenue: 289400, quota: 350000, change: -5, rank: 4 },
-  { id: "5", name: "Lisa Park", role: "Account Executive", email: "lisa@company.com", avatar: "LP", deals: 14, revenue: 267100, quota: 300000, change: 9, rank: 5 },
-];
+  {
+    id: "1",
+    name: "Sarah Chen",
+    role: "Senior AE",
+    email: "sarah@company.com",
+    avatar: "SC",
+    deals: 24,
+    revenue: 487500,
+    quota: 450000,
+    change: 15,
+    rank: 1,
+  },
+  {
+    id: "2",
+    name: "Mike Johnson",
+    role: "Account Executive",
+    email: "mike@company.com",
+    avatar: "MJ",
+    deals: 19,
+    revenue: 356200,
+    quota: 400000,
+    change: 8,
+    rank: 2,
+  },
+  {
+    id: "3",
+    name: "Emily Davis",
+    role: "Senior AE",
+    email: "emily@company.com",
+    avatar: "ED",
+    deals: 17,
+    revenue: 312800,
+    quota: 350000,
+    change: 12,
+    rank: 3,
+  },
+  {
+    id: "4",
+    name: "James Wilson",
+    role: "Account Executive",
+    email: "james@company.com",
+    avatar: "JW",
+    deals: 15,
+    revenue: 289400,
+    quota: 350000,
+    change: -5,
+    rank: 4,
+  },
+  {
+    id: "5",
+    name: "Lisa Park",
+    role: "Account Executive",
+    email: "lisa@company.com",
+    avatar: "LP",
+    deals: 14,
+    revenue: 267100,
+    quota: 300000,
+    change: 9,
+    rank: 5,
+  },
+]
 
 const performanceData = [
   { name: "Sarah", revenue: 487, quota: 450 },
@@ -40,11 +103,17 @@ const performanceData = [
   { name: "Emily", revenue: 312, quota: 350 },
   { name: "James", revenue: 289, quota: 350 },
   { name: "Lisa", revenue: 267, quota: 300 },
-];
+]
 
-function TeamMemberCard({ member, index }: { member: TeamMember; index: number }) {
-  const quotaPercentage = (member.revenue / member.quota) * 100;
-  const isAboveQuota = quotaPercentage >= 100;
+function TeamMemberCard({
+  member,
+  index,
+}: {
+  member: TeamMember
+  index: number
+}) {
+  const quotaPercentage = (member.revenue / member.quota) * 100
+  const isAboveQuota = quotaPercentage >= 100
 
   return (
     <div
@@ -64,11 +133,16 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
             )}
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-foreground">{member.name}</h4>
+            <h4 className="text-sm font-semibold text-foreground">
+              {member.name}
+            </h4>
             <p className="text-xs text-muted-foreground">{member.role}</p>
           </div>
         </div>
-        <button className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary opacity-0 group-hover:opacity-100 transition-all duration-200">
+        <button
+          type="button"
+          className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary opacity-0 group-hover:opacity-100 transition-all duration-200"
+        >
           <MoreHorizontal className="w-4 h-4" />
         </button>
       </div>
@@ -77,7 +151,9 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
       <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <p className="text-xs text-muted-foreground mb-1">Revenue</p>
-          <p className="text-lg font-bold text-foreground">${(member.revenue / 1000).toFixed(0)}k</p>
+          <p className="text-lg font-bold text-foreground">
+            ${(member.revenue / 1000).toFixed(0)}k
+          </p>
         </div>
         <div>
           <p className="text-xs text-muted-foreground mb-1">Deals Closed</p>
@@ -89,13 +165,21 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
       <div className="mb-4">
         <div className="flex items-center justify-between text-xs mb-1.5">
           <span className="text-muted-foreground">Quota Attainment</span>
-          <span className={cn("font-medium", isAboveQuota ? "text-success" : "text-foreground")}>
+          <span
+            className={cn(
+              "font-medium",
+              isAboveQuota ? "text-success" : "text-foreground",
+            )}
+          >
             {quotaPercentage.toFixed(0)}%
           </span>
         </div>
         <div className="h-2 bg-secondary rounded-full overflow-hidden">
           <div
-            className={cn("h-full rounded-full transition-all duration-700", isAboveQuota ? "bg-success" : "bg-accent")}
+            className={cn(
+              "h-full rounded-full transition-all duration-700",
+              isAboveQuota ? "bg-success" : "bg-accent",
+            )}
             style={{ width: `${Math.min(quotaPercentage, 100)}%` }}
           />
         </div>
@@ -104,33 +188,51 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
       {/* Change indicator */}
       <div className="flex items-center justify-between pt-4 border-t border-border">
         <div className="flex items-center gap-2">
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors">
+          <button
+            type="button"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
+          >
             <Mail className="w-4 h-4" />
           </button>
-          <button className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors">
+          <button
+            type="button"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
+          >
             <Phone className="w-4 h-4" />
           </button>
         </div>
-        <div className={cn("flex items-center gap-1 text-sm font-medium", member.change >= 0 ? "text-success" : "text-destructive")}>
-          {member.change >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
-          {member.change >= 0 ? "+" : ""}{member.change}%
+        <div
+          className={cn(
+            "flex items-center gap-1 text-sm font-medium",
+            member.change >= 0 ? "text-success" : "text-destructive",
+          )}
+        >
+          {member.change >= 0 ? (
+            <TrendingUp className="w-4 h-4" />
+          ) : (
+            <TrendingDown className="w-4 h-4" />
+          )}
+          {member.change >= 0 ? "+" : ""}
+          {member.change}%
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export function TeamSection() {
-  const [chartLoaded, setChartLoaded] = useState(false);
+  const [chartLoaded, setChartLoaded] = useState(false)
 
   useEffect(() => {
-    const timer = setTimeout(() => setChartLoaded(true), 400);
-    return () => clearTimeout(timer);
-  }, []);
+    const timer = setTimeout(() => setChartLoaded(true), 400)
+    return () => clearTimeout(timer)
+  }, [])
 
-  const totalRevenue = teamMembers.reduce((acc, m) => acc + m.revenue, 0);
-  const totalDeals = teamMembers.reduce((acc, m) => acc + m.deals, 0);
-  const avgQuotaAttainment = teamMembers.reduce((acc, m) => acc + (m.revenue / m.quota) * 100, 0) / teamMembers.length;
+  const totalRevenue = teamMembers.reduce((acc, m) => acc + m.revenue, 0)
+  const totalDeals = teamMembers.reduce((acc, m) => acc + m.deals, 0)
+  const avgQuotaAttainment =
+    teamMembers.reduce((acc, m) => acc + (m.revenue / m.quota) * 100, 0) /
+    teamMembers.length
 
   return (
     <div className="space-y-6">
@@ -143,7 +245,9 @@ export function TeamSection() {
             </div>
             <span className="text-sm text-muted-foreground">Team Revenue</span>
           </div>
-          <p className="text-2xl font-bold text-foreground">${(totalRevenue / 1000000).toFixed(2)}M</p>
+          <p className="text-2xl font-bold text-foreground">
+            ${(totalRevenue / 1000000).toFixed(2)}M
+          </p>
         </div>
         <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
           <div className="flex items-center gap-3 mb-2">
@@ -159,9 +263,13 @@ export function TeamSection() {
             <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
               <Trophy className="w-5 h-5 text-success" />
             </div>
-            <span className="text-sm text-muted-foreground">Avg Quota Attainment</span>
+            <span className="text-sm text-muted-foreground">
+              Avg Quota Attainment
+            </span>
           </div>
-          <p className="text-2xl font-bold text-foreground">{avgQuotaAttainment.toFixed(0)}%</p>
+          <p className="text-2xl font-bold text-foreground">
+            {avgQuotaAttainment.toFixed(0)}%
+          </p>
         </div>
       </div>
 
@@ -169,8 +277,12 @@ export function TeamSection() {
       <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h3 className="text-base font-semibold text-foreground">Revenue vs Quota</h3>
-            <p className="text-sm text-muted-foreground mt-0.5">Individual performance comparison</p>
+            <h3 className="text-base font-semibold text-foreground">
+              Revenue vs Quota
+            </h3>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Individual performance comparison
+            </p>
           </div>
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1.5">
@@ -183,10 +295,19 @@ export function TeamSection() {
             </div>
           </div>
         </div>
-        <div className={`h-[250px] transition-opacity duration-700 ${chartLoaded ? 'opacity-100' : 'opacity-0'}`}>
+        <div
+          className={`h-[250px] transition-opacity duration-700 ${chartLoaded ? "opacity-100" : "opacity-0"}`}
+        >
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={performanceData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.22 0.005 260)" vertical={false} />
+            <BarChart
+              data={performanceData}
+              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="oklch(0.22 0.005 260)"
+                vertical={false}
+              />
               <XAxis
                 dataKey="name"
                 axisLine={false}
@@ -212,8 +333,16 @@ export function TeamSection() {
                 itemStyle={{ color: "oklch(0.65 0 0)" }}
                 formatter={(value: number) => [`$${value}k`, ""]}
               />
-              <Bar dataKey="quota" fill="oklch(0.65 0 0 / 0.2)" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="revenue" fill="oklch(0.7 0.18 220)" radius={[4, 4, 0, 0]} />
+              <Bar
+                dataKey="quota"
+                fill="oklch(0.65 0 0 / 0.2)"
+                radius={[4, 4, 0, 0]}
+              />
+              <Bar
+                dataKey="revenue"
+                fill="oklch(0.7 0.18 220)"
+                radius={[4, 4, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -221,7 +350,9 @@ export function TeamSection() {
 
       {/* Team members grid */}
       <div>
-        <h3 className="text-base font-semibold text-foreground mb-4">Team Members</h3>
+        <h3 className="text-base font-semibold text-foreground mb-4">
+          Team Members
+        </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {teamMembers.map((member, index) => (
             <TeamMemberCard key={member.id} member={member} index={index} />
@@ -229,5 +360,5 @@ export function TeamSection() {
         </div>
       </div>
     </div>
-  );
+  )
 }

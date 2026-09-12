@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
-import { DashboardShell } from "@/components/dashboard/shell";
+import type { Metadata } from "next"
+import { DashboardShell } from "@/components/dashboard/shell"
 
 export const metadata: Metadata = {
   title: {
@@ -7,8 +7,10 @@ export const metadata: Metadata = {
     template: "%s | SalesOps Dashboard",
   },
   description: "Sales operations performance workspace.",
-};
+}
 
-export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <DashboardShell>{children}</DashboardShell>;
+export default function DashboardLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  return <DashboardShell>{children}</DashboardShell>
 }

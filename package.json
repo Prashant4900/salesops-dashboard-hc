@@ -5,7 +5,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "lint": "eslint .",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "start": "next start"
   },
   "dependencies": {
@@ -69,6 +70,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.13",
     "@tailwindcss/postcss": "^4.1.9",
     "@types/bcryptjs": "^3.0.0",
     "@types/node": "^22",

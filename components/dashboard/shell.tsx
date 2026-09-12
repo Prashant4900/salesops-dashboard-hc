@@ -1,19 +1,19 @@
-"use client";
+"use client"
 
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { Sidebar } from "@/components/dashboard/sidebar";
-import { Header } from "@/components/dashboard/header";
-import type { Section } from "@/lib/dashboard-config";
+import { usePathname } from "next/navigation"
+import { useState } from "react"
+import { Header } from "@/components/dashboard/header"
+import { Sidebar } from "@/components/dashboard/sidebar"
+import type { Section } from "@/lib/dashboard-config"
 
 interface DashboardShellProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function DashboardShell({ children }: DashboardShellProps) {
-  const pathname = usePathname();
-  const activeSection = (pathname.split("/")[1] || "overview") as Section;
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const pathname = usePathname()
+  const activeSection = (pathname.split("/")[1] || "overview") as Section
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -35,5 +35,5 @@ export function DashboardShell({ children }: DashboardShellProps) {
         </main>
       </div>
     </div>
-  );
+  )
 }

@@ -1,7 +1,5 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useState } from "react";
 import {
   ArrowRight,
   Check,
@@ -10,27 +8,29 @@ import {
   LockKeyhole,
   Mail,
   ShieldCheck,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "lucide-react"
+import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   useForgotPassword,
   useLogin,
   useRegister,
   useResetPassword,
-} from "@/lib/client/auth-hooks";
-import { useRouter, useSearchParams } from "next/navigation";
+} from "@/lib/client/auth-hooks"
 
 const inputClass =
-  "h-12 border-border bg-card/60 px-4 text-sm placeholder:text-muted-foreground/60";
+  "h-12 border-border bg-card/60 px-4 text-sm placeholder:text-muted-foreground/60"
 
 function Header({
   title,
   description,
 }: {
-  title: string;
-  description: string;
+  title: string
+  description: string
 }) {
   return (
     <div>
@@ -39,7 +39,7 @@ function Header({
         {description}
       </p>
     </div>
-  );
+  )
 }
 
 function PasswordInput({
@@ -48,12 +48,12 @@ function PasswordInput({
   onChange,
   placeholder = "Enter your password",
 }: {
-  id: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
+  id: string
+  value: string
+  onChange: (value: string) => void
+  placeholder?: string
 }) {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
   return (
     <div className="relative">
       <Input
@@ -73,16 +73,16 @@ function PasswordInput({
         {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
       </button>
     </div>
-  );
+  )
 }
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const login = useLogin();
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const error = login.error instanceof Error ? login.error.message : "";
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const login = useLogin()
+  const _router = useRouter()
+  const searchParams = useSearchParams()
+  const error = login.error instanceof Error ? login.error.message : ""
   return (
     <div className="w-full max-w-[430px] space-y-8">
       <Header
@@ -92,8 +92,8 @@ export function LoginForm() {
       <form
         className="space-y-5"
         onSubmit={(e) => {
-          e.preventDefault();
-          login.mutate({ email, password });
+          e.preventDefault()
+          login.mutate({ email, password })
         }}
       >
         <div className="space-y-2">
@@ -170,15 +170,15 @@ export function LoginForm() {
         access
       </div>
     </div>
-  );
+  )
 }
 
 export function RegisterForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const register = useRegister();
-  const error = register.error instanceof Error ? register.error.message : "";
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const register = useRegister()
+  const error = register.error instanceof Error ? register.error.message : ""
   return (
     <div className="w-full max-w-[430px] space-y-8">
       <Header
@@ -188,9 +188,9 @@ export function RegisterForm() {
       <form
         className="space-y-5"
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault()
           if (name && email && password.length >= 8)
-            register.mutate({ name, email, password });
+            register.mutate({ name, email, password })
         }}
       >
         <div className="space-y-2">
@@ -253,17 +253,17 @@ export function RegisterForm() {
         </Link>
       </p>
     </div>
-  );
+  )
 }
 
 export function ForgotPasswordForm() {
-  const [email, setEmail] = useState("");
-  const [sent, setSent] = useState(false);
-  const forgot = useForgotPassword();
+  const [email, setEmail] = useState("")
+  const [sent, setSent] = useState(false)
+  const forgot = useForgotPassword()
   const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) forgot.mutate({ email }, { onSuccess: () => setSent(true) });
-  };
+    e.preventDefault()
+    if (email) forgot.mutate({ email }, { onSuccess: () => setSent(true) })
+  }
   if (sent)
     return (
       <div className="w-full max-w-[430px] space-y-8">
@@ -288,7 +288,7 @@ export function ForgotPasswordForm() {
           </Link>
         </p>
       </div>
-    );
+    )
   return (
     <div className="w-full max-w-[430px] space-y-8">
       <Header
@@ -329,17 +329,17 @@ export function ForgotPasswordForm() {
         </Link>
       </p>
     </div>
-  );
+  )
 }
 
 export function ResetPasswordForm() {
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [done, setDone] = useState(false);
-  const reset = useResetPassword();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token") ?? "";
-  const error = reset.error instanceof Error ? reset.error.message : "";
+  const [password, setPassword] = useState("")
+  const [confirm, setConfirm] = useState("")
+  const [done, setDone] = useState(false)
+  const reset = useResetPassword()
+  const searchParams = useSearchParams()
+  const token = searchParams.get("token") ?? ""
+  const error = reset.error instanceof Error ? reset.error.message : ""
   if (done)
     return (
       <div className="w-full max-w-[430px] space-y-8">
@@ -357,8 +357,8 @@ export function ResetPasswordForm() {
           Continue to sign in
         </Link>
       </div>
-    );
-  const valid = password.length >= 8 && password === confirm && !!token;
+    )
+  const valid = password.length >= 8 && password === confirm && !!token
   return (
     <div className="w-full max-w-[430px] space-y-8">
       <Header
@@ -368,12 +368,12 @@ export function ResetPasswordForm() {
       <form
         className="space-y-5"
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault()
           if (valid)
             reset.mutate(
               { token, password },
               { onSuccess: () => setDone(true) },
-            );
+            )
         }}
       >
         <div className="space-y-2">
@@ -426,12 +426,12 @@ export function ResetPasswordForm() {
         )}
       </form>
     </div>
-  );
+  )
 }
 
 export function OnboardingForm() {
-  const [step, setStep] = useState(1);
-  const [complete, setComplete] = useState(false);
+  const [step, setStep] = useState(1)
+  const [complete, setComplete] = useState(false)
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -440,9 +440,9 @@ export function OnboardingForm() {
     website: "",
     industry: "",
     size: "",
-  });
+  })
   const update = (key: keyof typeof values, value: string) =>
-    setValues((current) => ({ ...current, [key]: value }));
+    setValues((current) => ({ ...current, [key]: value }))
   if (complete)
     return (
       <div className="w-full max-w-[540px] space-y-8">
@@ -460,8 +460,8 @@ export function OnboardingForm() {
           Open dashboard <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
       </div>
-    );
-  const ownerReady = values.name && values.email && values.password.length >= 8;
+    )
+  const ownerReady = values.name && values.email && values.password.length >= 8
   return (
     <div className="w-full max-w-[540px] space-y-7">
       <div className="flex items-center justify-between">
@@ -599,5 +599,5 @@ export function OnboardingForm() {
         </>
       )}
     </div>
-  );
+  )
 }

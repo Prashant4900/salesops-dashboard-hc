@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { MetricCard } from "@/components/dashboard/metric-card";
-import { RevenueChart } from "@/components/dashboard/charts/revenue-chart";
-import { PipelineOverview } from "@/components/dashboard/charts/pipeline-overview";
-import { RecentDeals } from "@/components/dashboard/recent-deals";
-import { TopPerformers } from "@/components/dashboard/top-performers";
-import { DollarSign, TrendingUp, Users, Target } from "lucide-react";
+import { DollarSign, Target, TrendingUp, Users } from "lucide-react"
+import { PipelineOverview } from "@/components/dashboard/charts/pipeline-overview"
+import { RevenueChart } from "@/components/dashboard/charts/revenue-chart"
+import { MetricCard } from "@/components/dashboard/metric-card"
+import { RecentDeals } from "@/components/dashboard/recent-deals"
+import { TopPerformers } from "@/components/dashboard/top-performers"
 
 export function OverviewSection() {
   return (
@@ -60,5 +60,5 @@ export function OverviewSection() {
         <TopPerformers />
       </div>
     </div>
-  );
+  )
 }

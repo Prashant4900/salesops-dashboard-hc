@@ -1,23 +1,23 @@
-"use client";
+"use client"
 
-import { cn } from "@/lib/utils";
-import { sectionTitles, type Section } from "@/lib/dashboard-config";
-import { Bell, Search, Calendar, Moon, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
+import { Bell, Calendar, Moon, Search, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
+import { type Section, sectionTitles } from "@/lib/dashboard-config"
+import { cn } from "@/lib/utils"
 
 interface HeaderProps {
-  activeSection: Section;
+  activeSection: Section
 }
 
 export function Header({ activeSection }: HeaderProps) {
-  const [searchFocused, setSearchFocused] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const { resolvedTheme, setTheme } = useTheme();
+  const [searchFocused, setSearchFocused] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const { resolvedTheme, setTheme } = useTheme()
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setMounted(true), [])
 
-  const isDark = resolvedTheme === "dark";
+  const isDark = resolvedTheme === "dark"
 
   return (
     <header className="h-16 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30 flex items-center justify-between px-6">
@@ -36,7 +36,7 @@ export function Header({ activeSection }: HeaderProps) {
         <div
           className={cn(
             "relative flex items-center transition-all duration-300",
-            searchFocused ? "w-64" : "w-48"
+            searchFocused ? "w-64" : "w-48",
           )}
         >
           <Search className="absolute left-3 w-4 h-4 text-muted-foreground pointer-events-none" />
@@ -56,22 +56,33 @@ export function Header({ activeSection }: HeaderProps) {
           onClick={() => setTheme(isDark ? "light" : "dark")}
           className="relative w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
         >
-          {mounted && (isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
+          {mounted &&
+            (isDark ? (
+              <Sun className="w-5 h-5" />
+            ) : (
+              <Moon className="w-5 h-5" />
+            ))}
         </button>
 
         {/* Notifications */}
-        <button className="relative w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200">
+        <button
+          type="button"
+          className="relative w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
+        >
           <Bell className="w-5 h-5" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full animate-pulse" />
         </button>
 
         {/* User avatar */}
-        <button className="w-9 h-9 rounded-lg overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 transition-all duration-200">
+        <button
+          type="button"
+          className="w-9 h-9 rounded-lg overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 transition-all duration-200"
+        >
           <div className="w-full h-full bg-gradient-to-br from-accent/80 to-chart-1 flex items-center justify-center text-xs font-semibold text-accent-foreground">
             JD
           </div>
         </button>
       </div>
     </header>
-  );
+  )
 }

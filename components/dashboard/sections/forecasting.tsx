@@ -1,40 +1,37 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import {
+  AlertTriangle,
+  ArrowRight,
+  CheckCircle2,
+  RefreshCw,
+  Target,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react"
+import { useEffect, useState } from "react"
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import {
-  TrendingUp,
-  TrendingDown,
-  Target,
-  Calendar,
-  DollarSign,
-  AlertTriangle,
-  CheckCircle2,
-  ArrowRight,
-  RefreshCw,
-} from "lucide-react";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  Cell,
-  Legend,
-} from "recharts";
+} from "@/components/ui/select"
 
 const forecastData = [
   { month: "Jan", actual: 420000, forecast: 400000, target: 450000 },
@@ -49,14 +46,14 @@ const forecastData = [
   { month: "Oct", actual: null, forecast: 750000, target: 650000 },
   { month: "Nov", actual: null, forecast: 800000, target: 700000 },
   { month: "Dec", actual: null, forecast: 850000, target: 700000 },
-];
+]
 
 const quarterlyForecast = [
   { quarter: "Q1", committed: 1200000, bestCase: 1450000, pipeline: 1800000 },
   { quarter: "Q2", committed: 1500000, bestCase: 1750000, pipeline: 2100000 },
   { quarter: "Q3", committed: 1800000, bestCase: 2100000, pipeline: 2500000 },
   { quarter: "Q4", committed: 2200000, bestCase: 2600000, pipeline: 3000000 },
-];
+]
 
 const riskFactors = [
   {
@@ -65,7 +62,11 @@ const riskFactors = [
     description: "3 deals at risk of pushing to next quarter",
     impact: "-$180,000",
     severity: "high",
-    deals: ["Acme Corp Enterprise", "GlobalTech Phase 2", "DataStream Analytics"],
+    deals: [
+      "Acme Corp Enterprise",
+      "GlobalTech Phase 2",
+      "DataStream Analytics",
+    ],
   },
   {
     id: 2,
@@ -83,36 +84,39 @@ const riskFactors = [
     severity: "high",
     deals: ["Innovate Labs", "TechStart Inc"],
   },
-];
+]
 
 const scenarios = [
   { name: "Conservative", probability: 85, revenue: 6200000, color: "chart-4" },
   { name: "Base Case", probability: 65, revenue: 7400000, color: "accent" },
   { name: "Optimistic", probability: 40, revenue: 8600000, color: "chart-1" },
-];
+]
 
 export function ForecastingSection() {
-  const [timeframe, setTimeframe] = useState("quarterly");
-  const [isLoading, setIsLoading] = useState(true);
+  const [timeframe, setTimeframe] = useState("quarterly")
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 800);
-    return () => clearTimeout(timer);
-  }, []);
+    const timer = setTimeout(() => setIsLoading(false), 800)
+    return () => clearTimeout(timer)
+  }, [])
 
-  const currentQuarterTarget = 1800000;
-  const currentQuarterForecast = 2100000;
-  const forecastAccuracy = 94;
-  const pipelineCoverage = 3.2;
+  const currentQuarterTarget = 1800000
+  const currentQuarterForecast = 2100000
+  const forecastAccuracy = 94
+  const pipelineCoverage = 3.2
 
   return (
     <div className="space-y-6">
       {/* Header Controls */}
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-foreground">Sales Forecasting</h2>
+          <h2 className="text-xl font-semibold text-foreground">
+            Sales Forecasting
+          </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            AI-powered predictions based on historical data and pipeline analysis
+            AI-powered predictions based on historical data and pipeline
+            analysis
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -172,7 +176,9 @@ export function ForecastingSection() {
           <Card
             key={stat.label}
             className={`border-border bg-card transition-all duration-500 ${
-              isLoading ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
+              isLoading
+                ? "opacity-0 translate-y-4"
+                : "opacity-100 translate-y-0"
             }`}
             style={{ transitionDelay: `${index * 100}ms` }}
           >
@@ -180,13 +186,19 @@ export function ForecastingSection() {
               <div className="flex items-start justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  <p className="text-2xl font-semibold text-foreground mt-1">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{stat.subtext}</p>
+                  <p className="text-2xl font-semibold text-foreground mt-1">
+                    {stat.value}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {stat.subtext}
+                  </p>
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <stat.icon
                     className={`w-5 h-5 ${
-                      stat.label === "At-Risk Revenue" ? "text-chart-3" : "text-accent"
+                      stat.label === "At-Risk Revenue"
+                        ? "text-chart-3"
+                        : "text-accent"
                     }`}
                   />
                   <Badge
@@ -215,7 +227,9 @@ export function ForecastingSection() {
       <Card className="border-border bg-card">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-medium">Revenue Forecast vs Actual</CardTitle>
+            <CardTitle className="text-base font-medium">
+              Revenue Forecast vs Actual
+            </CardTitle>
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-full bg-accent" />
@@ -237,16 +251,47 @@ export function ForecastingSection() {
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={forecastData}>
                 <defs>
-                  <linearGradient id="actualGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="oklch(0.7 0.18 145)" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="oklch(0.7 0.18 145)" stopOpacity={0} />
+                  <linearGradient
+                    id="actualGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="5%"
+                      stopColor="oklch(0.7 0.18 145)"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="oklch(0.7 0.18 145)"
+                      stopOpacity={0}
+                    />
                   </linearGradient>
-                  <linearGradient id="forecastGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="oklch(0.7 0.18 220)" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="oklch(0.7 0.18 220)" stopOpacity={0} />
+                  <linearGradient
+                    id="forecastGradient"
+                    x1="0"
+                    y1="0"
+                    x2="0"
+                    y2="1"
+                  >
+                    <stop
+                      offset="5%"
+                      stopColor="oklch(0.7 0.18 220)"
+                      stopOpacity={0.3}
+                    />
+                    <stop
+                      offset="95%"
+                      stopColor="oklch(0.7 0.18 220)"
+                      stopOpacity={0}
+                    />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.22 0.005 260)" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="oklch(0.22 0.005 260)"
+                />
                 <XAxis dataKey="month" stroke="oklch(0.65 0 0)" fontSize={12} />
                 <YAxis
                   stroke="oklch(0.65 0 0)"
@@ -260,7 +305,10 @@ export function ForecastingSection() {
                     borderRadius: "8px",
                     color: "oklch(0.95 0 0)",
                   }}
-                  formatter={(value: number) => [`$${value.toLocaleString()}`, ""]}
+                  formatter={(value: number) => [
+                    `$${value.toLocaleString()}`,
+                    "",
+                  ]}
                 />
                 <Area
                   type="monotone"
@@ -294,14 +342,23 @@ export function ForecastingSection() {
         {/* Quarterly Forecast Breakdown */}
         <Card className="border-border bg-card">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium">Quarterly Forecast Breakdown</CardTitle>
+            <CardTitle className="text-base font-medium">
+              Quarterly Forecast Breakdown
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={quarterlyForecast} barGap={4}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.22 0.005 260)" />
-                  <XAxis dataKey="quarter" stroke="oklch(0.65 0 0)" fontSize={12} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="oklch(0.22 0.005 260)"
+                  />
+                  <XAxis
+                    dataKey="quarter"
+                    stroke="oklch(0.65 0 0)"
+                    fontSize={12}
+                  />
                   <YAxis
                     stroke="oklch(0.65 0 0)"
                     fontSize={12}
@@ -314,7 +371,10 @@ export function ForecastingSection() {
                       borderRadius: "8px",
                       color: "oklch(0.95 0 0)",
                     }}
-                    formatter={(value: number) => [`$${(value / 1000000).toFixed(2)}M`, ""]}
+                    formatter={(value: number) => [
+                      `$${(value / 1000000).toFixed(2)}M`,
+                      "",
+                    ]}
                   />
                   <Legend
                     wrapperStyle={{ fontSize: "12px" }}
@@ -322,9 +382,24 @@ export function ForecastingSection() {
                       <span style={{ color: "oklch(0.65 0 0)" }}>{value}</span>
                     )}
                   />
-                  <Bar dataKey="committed" name="Committed" fill="oklch(0.7 0.18 145)" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="bestCase" name="Best Case" fill="oklch(0.7 0.18 220)" radius={[4, 4, 0, 0]} />
-                  <Bar dataKey="pipeline" name="Pipeline" fill="oklch(0.22 0.005 260)" radius={[4, 4, 0, 0]} />
+                  <Bar
+                    dataKey="committed"
+                    name="Committed"
+                    fill="oklch(0.7 0.18 145)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="bestCase"
+                    name="Best Case"
+                    fill="oklch(0.7 0.18 220)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="pipeline"
+                    name="Pipeline"
+                    fill="oklch(0.22 0.005 260)"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -334,7 +409,9 @@ export function ForecastingSection() {
         {/* Scenario Analysis */}
         <Card className="border-border bg-card">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium">Scenario Analysis</CardTitle>
+            <CardTitle className="text-base font-medium">
+              Scenario Analysis
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {scenarios.map((scenario, index) => (
@@ -352,12 +429,14 @@ export function ForecastingSection() {
                           scenario.color === "accent"
                             ? "oklch(0.7 0.18 145)"
                             : scenario.color === "chart-1"
-                            ? "oklch(0.7 0.18 220)"
-                            : "oklch(0.65 0.2 25)",
+                              ? "oklch(0.7 0.18 220)"
+                              : "oklch(0.65 0.2 25)",
                       }}
                     />
                     <div>
-                      <p className="font-medium text-foreground">{scenario.name}</p>
+                      <p className="font-medium text-foreground">
+                        {scenario.name}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         {scenario.probability}% probability
                       </p>
@@ -376,8 +455,8 @@ export function ForecastingSection() {
                         scenario.color === "accent"
                           ? "oklch(0.7 0.18 145)"
                           : scenario.color === "chart-1"
-                          ? "oklch(0.7 0.18 220)"
-                          : "oklch(0.65 0.2 25)",
+                            ? "oklch(0.7 0.18 220)"
+                            : "oklch(0.65 0.2 25)",
                     }}
                   />
                 </div>
@@ -391,7 +470,9 @@ export function ForecastingSection() {
       <Card className="border-border bg-card">
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-base font-medium">Risk Factors</CardTitle>
+            <CardTitle className="text-base font-medium">
+              Risk Factors
+            </CardTitle>
             <Badge variant="outline" className="text-chart-3 border-chart-3/30">
               <AlertTriangle className="w-3 h-3 mr-1" />
               {riskFactors.length} identified
@@ -410,12 +491,18 @@ export function ForecastingSection() {
                   <div className="flex items-start gap-3">
                     <div
                       className={`w-2 h-2 rounded-full mt-2 ${
-                        risk.severity === "high" ? "bg-destructive" : "bg-chart-3"
+                        risk.severity === "high"
+                          ? "bg-destructive"
+                          : "bg-chart-3"
                       }`}
                     />
                     <div>
-                      <p className="font-medium text-foreground">{risk.title}</p>
-                      <p className="text-sm text-muted-foreground">{risk.description}</p>
+                      <p className="font-medium text-foreground">
+                        {risk.title}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {risk.description}
+                      </p>
                     </div>
                   </div>
                   <Badge
@@ -455,5 +542,5 @@ export function ForecastingSection() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

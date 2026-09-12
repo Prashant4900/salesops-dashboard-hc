@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { cn } from "@/lib/utils";
-import { TrendingUp, TrendingDown } from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react"
+import { TrendingDown, TrendingUp } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface MetricCardProps {
-  title: string;
-  value: string;
-  change: string;
-  changeType: "positive" | "negative" | "neutral";
-  icon: LucideIcon;
-  delay?: number;
+  title: string
+  value: string
+  change: string
+  changeType: "positive" | "negative" | "neutral"
+  icon: LucideIcon
+  delay?: number
 }
 
 export function MetricCard({
@@ -48,10 +48,12 @@ export function MetricCard({
               "flex items-center gap-1 text-sm font-medium mb-1",
               changeType === "positive" && "text-success",
               changeType === "negative" && "text-destructive",
-              changeType === "neutral" && "text-muted-foreground"
+              changeType === "neutral" && "text-muted-foreground",
             )}
           >
-            {changeType === "positive" && <TrendingUp className="w-3.5 h-3.5" />}
+            {changeType === "positive" && (
+              <TrendingUp className="w-3.5 h-3.5" />
+            )}
             {changeType === "negative" && (
               <TrendingDown className="w-3.5 h-3.5" />
             )}
@@ -60,5 +62,5 @@ export function MetricCard({
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import { CustomersSection } from "@/components/dashboard/sections/customers";
+import { CustomersSection } from "@/components/dashboard/sections/customers"
 
-export const metadata = { title: "Customers" };
+export const metadata = { title: "Customers" }
 
 export default function CustomersPage() {
-  return <CustomersSection />;
+  return <CustomersSection />
 }

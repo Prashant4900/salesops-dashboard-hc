@@ -1,26 +1,26 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Building2,
-  Search,
-  Plus,
-  MapPin,
-  Mail,
-  Phone,
-  DollarSign,
   Calendar,
+  DollarSign,
   ExternalLink,
-  Star,
-  TrendingUp,
-  TrendingDown,
   Filter,
-} from "lucide-react";
+  Mail,
+  MapPin,
+  Phone,
+  Plus,
+  Search,
+  Star,
+  TrendingDown,
+  TrendingUp,
+} from "lucide-react"
+import { useState } from "react"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 
 const customers = [
   {
@@ -113,30 +113,30 @@ const customers = [
     trend: "up",
     lastContact: "Today",
   },
-];
+]
 
 const tierColors: Record<string, string> = {
   Enterprise: "bg-accent/20 text-accent border-accent/30",
   Growth: "bg-chart-1/20 text-chart-1 border-chart-1/30",
   Starter: "bg-muted text-muted-foreground border-border",
-};
+}
 
 export function CustomersSection() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTier, setSelectedTier] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedTier, setSelectedTier] = useState<string | null>(null)
 
   const filteredCustomers = customers.filter((customer) => {
     const matchesSearch =
       customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      customer.contact.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTier = !selectedTier || customer.tier === selectedTier;
-    return matchesSearch && matchesTier;
-  });
+      customer.contact.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesTier = !selectedTier || customer.tier === selectedTier
+    return matchesSearch && matchesTier
+  })
 
-  const totalRevenue = customers.reduce((acc, c) => acc + c.totalRevenue, 0);
+  const totalRevenue = customers.reduce((acc, c) => acc + c.totalRevenue, 0)
   const avgHealthScore = Math.round(
-    customers.reduce((acc, c) => acc + c.healthScore, 0) / customers.length
-  );
+    customers.reduce((acc, c) => acc + c.healthScore, 0) / customers.length,
+  )
 
   return (
     <div className="space-y-6">
@@ -163,7 +163,9 @@ export function CustomersSection() {
           },
           {
             label: "Active Deals",
-            value: customers.reduce((acc, c) => acc + c.activeDeals, 0).toString(),
+            value: customers
+              .reduce((acc, c) => acc + c.activeDeals, 0)
+              .toString(),
             icon: TrendingUp,
             color: "text-chart-1",
           },
@@ -207,8 +209,14 @@ export function CustomersSection() {
                 key={tier}
                 variant={selectedTier === tier ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedTier(selectedTier === tier ? null : tier)}
-                className={selectedTier === tier ? "bg-accent text-accent-foreground" : ""}
+                onClick={() =>
+                  setSelectedTier(selectedTier === tier ? null : tier)
+                }
+                className={
+                  selectedTier === tier
+                    ? "bg-accent text-accent-foreground"
+                    : ""
+                }
               >
                 {tier}
               </Button>
@@ -234,14 +242,20 @@ export function CustomersSection() {
                 <div className="flex items-center gap-3">
                   <Avatar className="w-12 h-12 bg-secondary">
                     <AvatarFallback className="bg-secondary text-foreground font-semibold">
-                      {customer.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                      {customer.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
                   <div>
                     <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors">
                       {customer.name}
                     </h3>
-                    <p className="text-sm text-muted-foreground">{customer.industry}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {customer.industry}
+                    </p>
                   </div>
                 </div>
                 <Badge className={`${tierColors[customer.tier]} border`}>
@@ -273,11 +287,15 @@ export function CustomersSection() {
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Active Deals</span>
-                    <span className="font-medium text-foreground">{customer.activeDeals}</span>
+                    <span className="font-medium text-foreground">
+                      {customer.activeDeals}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Last Contact</span>
-                    <span className="font-medium text-foreground">{customer.lastContact}</span>
+                    <span className="font-medium text-foreground">
+                      {customer.lastContact}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -285,7 +303,9 @@ export function CustomersSection() {
               {/* Health Score */}
               <div className="flex items-center justify-between pt-4 border-t border-border">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Health Score</span>
+                  <span className="text-sm text-muted-foreground">
+                    Health Score
+                  </span>
                   {customer.trend === "up" && (
                     <TrendingUp className="w-3.5 h-3.5 text-accent" />
                   )}
@@ -303,8 +323,8 @@ export function CustomersSection() {
                           customer.healthScore >= 80
                             ? "oklch(0.7 0.18 145)"
                             : customer.healthScore >= 60
-                            ? "oklch(0.75 0.18 55)"
-                            : "oklch(0.65 0.2 25)",
+                              ? "oklch(0.75 0.18 55)"
+                              : "oklch(0.65 0.2 25)",
                       }}
                     />
                   </div>
@@ -313,8 +333,8 @@ export function CustomersSection() {
                       customer.healthScore >= 80
                         ? "text-accent"
                         : customer.healthScore >= 60
-                        ? "text-chart-3"
-                        : "text-destructive"
+                          ? "text-chart-3"
+                          : "text-destructive"
                     }`}
                   >
                     {customer.healthScore}%
@@ -324,11 +344,19 @@ export function CustomersSection() {
 
               {/* Quick Actions */}
               <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
-                <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-transparent"
+                >
                   <Calendar className="w-3.5 h-3.5 mr-1.5" />
                   Schedule
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1 bg-transparent">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1 bg-transparent"
+                >
                   <Mail className="w-3.5 h-3.5 mr-1.5" />
                   Email
                 </Button>
@@ -341,5 +369,5 @@ export function CustomersSection() {
         ))}
       </div>
     </div>
-  );
+  )
 }

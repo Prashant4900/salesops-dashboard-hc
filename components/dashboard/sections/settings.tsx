@@ -1,37 +1,43 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Bell,
+  Check,
+  Database,
+  ExternalLink,
+  Globe,
+  Key,
+  Link2,
+  Mail,
+  Palette,
+  RefreshCw,
+  Shield,
+  Smartphone,
+  User,
+  Zap,
+} from "lucide-react"
+import { useState } from "react"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  User,
-  Bell,
-  Shield,
-  Palette,
-  Link2,
-  Database,
-  Mail,
-  Smartphone,
-  Globe,
-  Key,
-  RefreshCw,
-  Check,
-  ExternalLink,
-  Zap,
-} from "lucide-react";
+} from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const integrations = [
   {
@@ -76,7 +82,7 @@ const integrations = [
     connected: true,
     lastSync: "1 hour ago",
   },
-];
+]
 
 const notificationSettings = [
   {
@@ -114,23 +120,23 @@ const notificationSettings = [
     email: false,
     push: true,
   },
-];
+]
 
 export function SettingsSection() {
-  const [activeTab, setActiveTab] = useState("profile");
-  const [notifications, setNotifications] = useState(notificationSettings);
-  const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile")
+  const [notifications, setNotifications] = useState(notificationSettings)
+  const [isSaving, setIsSaving] = useState(false)
 
   const handleSave = () => {
-    setIsSaving(true);
-    setTimeout(() => setIsSaving(false), 1500);
-  };
+    setIsSaving(true)
+    setTimeout(() => setIsSaving(false), 1500)
+  }
 
   const toggleNotification = (id: string, type: "email" | "push") => {
     setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, [type]: !n[type] } : n))
-    );
-  };
+      prev.map((n) => (n.id === id ? { ...n, [type]: !n[type] } : n)),
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -141,7 +147,11 @@ export function SettingsSection() {
         </p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="space-y-6"
+      >
         <TabsList className="bg-secondary border border-border p-1">
           <TabsTrigger
             value="profile"
@@ -174,11 +184,18 @@ export function SettingsSection() {
         </TabsList>
 
         {/* Profile Tab */}
-        <TabsContent value="profile" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <TabsContent
+          value="profile"
+          className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
+        >
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base font-medium">Personal Information</CardTitle>
-              <CardDescription>Update your personal details and preferences</CardDescription>
+              <CardTitle className="text-base font-medium">
+                Personal Information
+              </CardTitle>
+              <CardDescription>
+                Update your personal details and preferences
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center gap-6">
@@ -191,7 +208,9 @@ export function SettingsSection() {
                   <Button variant="outline" size="sm">
                     Change Avatar
                   </Button>
-                  <p className="text-xs text-muted-foreground">JPG, PNG or GIF. Max 2MB.</p>
+                  <p className="text-xs text-muted-foreground">
+                    JPG, PNG or GIF. Max 2MB.
+                  </p>
                 </div>
               </div>
 
@@ -257,7 +276,9 @@ export function SettingsSection() {
 
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base font-medium">Display Preferences</CardTitle>
+              <CardTitle className="text-base font-medium">
+                Display Preferences
+              </CardTitle>
               <CardDescription>Customize how data is displayed</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -266,7 +287,9 @@ export function SettingsSection() {
                   <Palette className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <p className="font-medium text-foreground">Dark Mode</p>
-                    <p className="text-sm text-muted-foreground">Use dark theme for the interface</p>
+                    <p className="text-sm text-muted-foreground">
+                      Use dark theme for the interface
+                    </p>
                   </div>
                 </div>
                 <Switch defaultChecked />
@@ -275,8 +298,12 @@ export function SettingsSection() {
                 <div className="flex items-center gap-3">
                   <Globe className="w-5 h-5 text-muted-foreground" />
                   <div>
-                    <p className="font-medium text-foreground">Currency Format</p>
-                    <p className="text-sm text-muted-foreground">Display currency in your locale</p>
+                    <p className="font-medium text-foreground">
+                      Currency Format
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Display currency in your locale
+                    </p>
                   </div>
                 </div>
                 <Select defaultValue="usd">
@@ -295,7 +322,9 @@ export function SettingsSection() {
                   <Database className="w-5 h-5 text-muted-foreground" />
                   <div>
                     <p className="font-medium text-foreground">Compact View</p>
-                    <p className="text-sm text-muted-foreground">Show more data in less space</p>
+                    <p className="text-sm text-muted-foreground">
+                      Show more data in less space
+                    </p>
                   </div>
                 </div>
                 <Switch />
@@ -325,11 +354,18 @@ export function SettingsSection() {
         </TabsContent>
 
         {/* Notifications Tab */}
-        <TabsContent value="notifications" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <TabsContent
+          value="notifications"
+          className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
+        >
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base font-medium">Notification Preferences</CardTitle>
-              <CardDescription>Choose how and when you want to be notified</CardDescription>
+              <CardTitle className="text-base font-medium">
+                Notification Preferences
+              </CardTitle>
+              <CardDescription>
+                Choose how and when you want to be notified
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-1">
@@ -351,19 +387,27 @@ export function SettingsSection() {
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
                     <div>
-                      <p className="font-medium text-foreground">{notification.label}</p>
-                      <p className="text-sm text-muted-foreground">{notification.description}</p>
+                      <p className="font-medium text-foreground">
+                        {notification.label}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {notification.description}
+                      </p>
                     </div>
                     <div className="flex items-center justify-center">
                       <Switch
                         checked={notification.email}
-                        onCheckedChange={() => toggleNotification(notification.id, "email")}
+                        onCheckedChange={() =>
+                          toggleNotification(notification.id, "email")
+                        }
                       />
                     </div>
                     <div className="flex items-center justify-center">
                       <Switch
                         checked={notification.push}
-                        onCheckedChange={() => toggleNotification(notification.id, "push")}
+                        onCheckedChange={() =>
+                          toggleNotification(notification.id, "push")
+                        }
                       />
                     </div>
                   </div>
@@ -374,11 +418,18 @@ export function SettingsSection() {
         </TabsContent>
 
         {/* Integrations Tab */}
-        <TabsContent value="integrations" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <TabsContent
+          value="integrations"
+          className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
+        >
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base font-medium">Connected Services</CardTitle>
-              <CardDescription>Manage your third-party integrations</CardDescription>
+              <CardTitle className="text-base font-medium">
+                Connected Services
+              </CardTitle>
+              <CardDescription>
+                Manage your third-party integrations
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -401,13 +452,19 @@ export function SettingsSection() {
                         >
                           <Zap
                             className={`w-5 h-5 ${
-                              integration.connected ? "text-accent" : "text-muted-foreground"
+                              integration.connected
+                                ? "text-accent"
+                                : "text-muted-foreground"
                             }`}
                           />
                         </div>
                         <div>
-                          <p className="font-medium text-foreground">{integration.name}</p>
-                          <p className="text-sm text-muted-foreground">{integration.description}</p>
+                          <p className="font-medium text-foreground">
+                            {integration.name}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {integration.description}
+                          </p>
                         </div>
                       </div>
                       <Badge
@@ -431,14 +488,20 @@ export function SettingsSection() {
                               <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
                               Sync
                             </Button>
-                            <Button variant="ghost" size="sm" className="h-8 text-destructive hover:text-destructive">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 text-destructive hover:text-destructive"
+                            >
                               Disconnect
                             </Button>
                           </div>
                         </>
                       ) : (
                         <>
-                          <span className="text-xs text-muted-foreground">Not configured</span>
+                          <span className="text-xs text-muted-foreground">
+                            Not configured
+                          </span>
                           <Button
                             size="sm"
                             className="h-8 bg-accent hover:bg-accent/90 text-accent-foreground"
@@ -457,11 +520,18 @@ export function SettingsSection() {
         </TabsContent>
 
         {/* Security Tab */}
-        <TabsContent value="security" className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+        <TabsContent
+          value="security"
+          className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
+        >
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base font-medium">Password & Authentication</CardTitle>
-              <CardDescription>Manage your account security settings</CardDescription>
+              <CardTitle className="text-base font-medium">
+                Password & Authentication
+              </CardTitle>
+              <CardDescription>
+                Manage your account security settings
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
@@ -496,8 +566,12 @@ export function SettingsSection() {
 
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base font-medium">Two-Factor Authentication</CardTitle>
-              <CardDescription>Add an extra layer of security to your account</CardDescription>
+              <CardTitle className="text-base font-medium">
+                Two-Factor Authentication
+              </CardTitle>
+              <CardDescription>
+                Add an extra layer of security to your account
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50 border border-border">
@@ -506,14 +580,18 @@ export function SettingsSection() {
                     <Key className="w-5 h-5 text-accent" />
                   </div>
                   <div>
-                    <p className="font-medium text-foreground">Authenticator App</p>
+                    <p className="font-medium text-foreground">
+                      Authenticator App
+                    </p>
                     <p className="text-sm text-muted-foreground">
                       Use an authenticator app for 2FA codes
                     </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge className="bg-accent/20 text-accent border-accent/30">Enabled</Badge>
+                  <Badge className="bg-accent/20 text-accent border-accent/30">
+                    Enabled
+                  </Badge>
                   <Button variant="outline" size="sm">
                     Manage
                   </Button>
@@ -524,20 +602,39 @@ export function SettingsSection() {
 
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-base font-medium">Active Sessions</CardTitle>
-              <CardDescription>Manage devices where you&apos;re signed in</CardDescription>
+              <CardTitle className="text-base font-medium">
+                Active Sessions
+              </CardTitle>
+              <CardDescription>
+                Manage devices where you&apos;re signed in
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
                 {[
-                  { device: "MacBook Pro", location: "San Francisco, CA", current: true, time: "Now" },
-                  { device: "iPhone 15", location: "San Francisco, CA", current: false, time: "2 hours ago" },
-                  { device: "Chrome on Windows", location: "New York, NY", current: false, time: "1 day ago" },
-                ].map((session, index) => (
+                  {
+                    device: "MacBook Pro",
+                    location: "San Francisco, CA",
+                    current: true,
+                    time: "Now",
+                  },
+                  {
+                    device: "iPhone 15",
+                    location: "San Francisco, CA",
+                    current: false,
+                    time: "2 hours ago",
+                  },
+                  {
+                    device: "Chrome on Windows",
+                    location: "New York, NY",
+                    current: false,
+                    time: "1 day ago",
+                  },
+                ].map((session) => (
                   <div
-                    key={index}
+                    key={session.device}
                     className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border animate-in fade-in slide-in-from-left-2"
-                    style={{ animationDelay: `${index * 75}ms` }}
+                    style={{ animationDelay: "0ms" }}
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
@@ -558,7 +655,11 @@ export function SettingsSection() {
                       </div>
                     </div>
                     {!session.current && (
-                      <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive hover:text-destructive"
+                      >
                         Revoke
                       </Button>
                     )}
@@ -570,5 +671,5 @@ export function SettingsSection() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

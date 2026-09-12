@@ -1,7 +1,7 @@
-import { OverviewSection } from "@/components/dashboard/sections/overview";
+import { OverviewSection } from "@/components/dashboard/sections/overview"
 
-export const metadata = { title: "Overview" };
+export const metadata = { title: "Overview" }
 
 export default function OverviewPage() {
-  return <OverviewSection />;
+  return <OverviewSection />
 }
