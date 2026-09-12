@@ -84,7 +84,7 @@ export function LoginForm() {
   const searchParams = useSearchParams()
   const error = login.error instanceof Error ? login.error.message : ""
   return (
-    <div className="w-full max-w-[430px] space-y-8">
+    <div className="w-full max-w-107.5 space-y-8">
       <Header
         title="Welcome back"
         description="Sign in with your work email to continue to your SalesOps workspace."
@@ -180,7 +180,7 @@ export function RegisterForm() {
   const register = useRegister()
   const error = register.error instanceof Error ? register.error.message : ""
   return (
-    <div className="w-full max-w-[430px] space-y-8">
+    <div className="w-full max-w-107.5 space-y-8">
       <Header
         title="Create your account"
         description="Start with your email and set up your personal access details."
@@ -266,7 +266,7 @@ export function ForgotPasswordForm() {
   }
   if (sent)
     return (
-      <div className="w-full max-w-[430px] space-y-8">
+      <div className="w-full max-w-107.5 space-y-8">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/15 text-accent">
           <Mail className="h-5 w-5" />
         </div>
@@ -290,7 +290,7 @@ export function ForgotPasswordForm() {
       </div>
     )
   return (
-    <div className="w-full max-w-[430px] space-y-8">
+    <div className="w-full max-w-107.5 space-y-8">
       <Header
         title="Reset your password"
         description="Enter your work email and we'll send you a secure link to choose a new password."
@@ -342,7 +342,7 @@ export function ResetPasswordForm() {
   const error = reset.error instanceof Error ? reset.error.message : ""
   if (done)
     return (
-      <div className="w-full max-w-[430px] space-y-8">
+      <div className="w-full max-w-107.5 space-y-8">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/15 text-accent">
           <Check className="h-5 w-5" />
         </div>
@@ -360,7 +360,7 @@ export function ResetPasswordForm() {
     )
   const valid = password.length >= 8 && password === confirm && !!token
   return (
-    <div className="w-full max-w-[430px] space-y-8">
+    <div className="w-full max-w-107.5 space-y-8">
       <Header
         title="Choose a new password"
         description="Create a strong password you haven't used before."
@@ -445,7 +445,7 @@ export function OnboardingForm() {
     setValues((current) => ({ ...current, [key]: value }))
   if (complete)
     return (
-      <div className="w-full max-w-[540px] space-y-8">
+      <div className="w-full max-w-135 space-y-8">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/15 text-accent">
           <Check className="h-6 w-6" />
         </div>
@@ -463,7 +463,7 @@ export function OnboardingForm() {
     )
   const ownerReady = values.name && values.email && values.password.length >= 8
   return (
-    <div className="w-full max-w-[540px] space-y-7">
+    <div className="w-full max-w-135 space-y-7">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
@@ -591,7 +591,7 @@ export function OnboardingForm() {
             <Button
               disabled={!values.company || !values.industry || !values.size}
               onClick={() => setComplete(true)}
-              className="h-12 flex-[2] gap-2 bg-accent text-accent-foreground hover:bg-accent/90"
+              className="h-12 flex-2 gap-2 bg-accent text-accent-foreground hover:bg-accent/90"
             >
               Create workspace <Check className="h-4 w-4" />
             </Button>

@@ -21,7 +21,7 @@ export function Header({ activeSection }: HeaderProps) {
   useEffect(() => setMounted(true), [])
 
   const isDark = resolvedTheme === "dark"
-  const initials = user?.name 
+  const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2)
     : user?.email.substring(0, 2).toUpperCase() || "JD"
 
@@ -86,7 +86,7 @@ export function Header({ activeSection }: HeaderProps) {
           title="Click to logout"
           className="w-9 h-9 rounded-lg overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 transition-all duration-200"
         >
-          <div className="w-full h-full bg-gradient-to-br from-accent/80 to-chart-1 flex items-center justify-center text-xs font-semibold text-accent-foreground">
+          <div className="w-full h-full bg-linear-to-br from-accent/80 to-chart-1 flex items-center justify-center text-xs font-semibold text-accent-foreground">
             {initials}
           </div>
         </button>
