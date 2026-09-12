@@ -1,5 +1,5 @@
-import { jwtVerify } from "jose"
 import { type NextRequest, NextResponse } from "next/server"
+import { verifySessionToken } from "./lib/auth/session"
 
 const SESSION_COOKIE = "salesops_session"
 const PROTECTED_PREFIXES = [
@@ -16,15 +16,8 @@ const AUTH_ROUTES = ["/auth/login", "/auth/register"]
 
 async function isValidSession(token: string | undefined) {
   if (!token) return false
-  const secretValue = process.env.AUTH_SECRET
-  if (!secretValue) return false
-  try {
-    const secret = new TextEncoder().encode(secretValue)
-    await jwtVerify(token, secret)
-    return true
-  } catch {
-    return false
-  }
+  const payload = await verifySessionToken(token)
+  return payload !== null
 }
 
 export async function middleware(request: NextRequest) {
