@@ -8,10 +8,12 @@ import type {
   LoginInput,
   RegisterInput,
   ResetPasswordInput,
+  OnboardingInput,
 } from "@/lib/auth/schemas"
 import type { Role } from "@/lib/generated/prisma/enums"
 import { userRepo } from "@/lib/repos/user.repo"
 import { tokenRepo } from "@/lib/repos/token.repo"
+import { businessRepo } from "@/lib/repos/business.repo"
 
 export class AuthError extends Error {}
 
@@ -29,6 +31,40 @@ export async function registerUser(input: RegisterInput) {
     password: passwordHash,
     role: "STAFF" as Role,
   })
+  return { id: user.id, name: user.name, email: user.email, role: user.role }
+}
+
+export async function onboardOwner(input: OnboardingInput) {
+  const hasOwner = await userRepo.hasOwner()
+  if (hasOwner) {
+    throw new AuthError("System is already initialized.")
+  }
+
+  const existing = await userRepo.findByEmail(input.email)
+  if (existing) {
+    throw new AuthError("An account with this email already exists.")
+  }
+
+  const passwordHash = await bcrypt.hash(input.password, HASH_ROUNDS)
+  
+  // Use a simple slug for the business based on the company name
+  const slug = input.company.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+  
+  const { user } = await businessRepo.createOwnerAndBusiness({
+    user: {
+      name: input.name,
+      email: input.email.toLowerCase(),
+      password: passwordHash,
+    },
+    business: {
+      name: input.company,
+      slug,
+      website: input.website || null,
+      industry: input.industry,
+      size: input.size,
+    }
+  })
+  
   return { id: user.id, name: user.name, email: user.email, role: user.role }
 }
 

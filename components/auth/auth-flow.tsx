@@ -20,6 +20,7 @@ import {
   useLogin,
   useRegister,
   useResetPassword,
+  useOnboarding,
 } from "@/hooks/use-auth"
 
 const inputClass =
@@ -431,7 +432,9 @@ export function ResetPasswordForm() {
 
 export function OnboardingForm() {
   const [step, setStep] = useState(1)
-  const [complete, setComplete] = useState(false)
+  const onboarding = useOnboarding()
+  const error = onboarding.error instanceof Error ? onboarding.error.message : ""
+  
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -443,24 +446,7 @@ export function OnboardingForm() {
   })
   const update = (key: keyof typeof values, value: string) =>
     setValues((current) => ({ ...current, [key]: value }))
-  if (complete)
-    return (
-      <div className="w-full max-w-135 space-y-8">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent/15 text-accent">
-          <Check className="h-6 w-6" />
-        </div>
-        <Header
-          title="Your workspace is ready"
-          description={`Welcome to SalesOps, ${values.name || "there"}. Your ${values.company || "company"} workspace has been set up.`}
-        />
-        <Link
-          href="/overview"
-          className="flex h-12 items-center justify-center rounded-md bg-accent font-medium text-accent-foreground"
-        >
-          Open dashboard <ArrowRight className="ml-2 h-4 w-4" />
-        </Link>
-      </div>
-    )
+
   const ownerReady = values.name && values.email && values.password.length >= 8
   return (
     <div className="w-full max-w-135 space-y-7">
@@ -589,13 +575,16 @@ export function OnboardingForm() {
               Back
             </Button>
             <Button
-              disabled={!values.company || !values.industry || !values.size}
-              onClick={() => setComplete(true)}
+              disabled={!values.company || !values.industry || !values.size || onboarding.isPending}
+              onClick={() => onboarding.mutate(values)}
               className="h-12 flex-2 gap-2 bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              Create workspace <Check className="h-4 w-4" />
+              {onboarding.isPending ? "Creating workspace..." : (
+                <>Create workspace <Check className="h-4 w-4" /></>
+              )}
             </Button>
           </div>
+          {error && <p className="text-sm text-destructive mt-4">{error}</p>}
         </>
       )}
     </div>

@@ -6,6 +6,7 @@ import type {
   LoginInput,
   RegisterInput,
   ResetPasswordInput,
+  OnboardingInput,
 } from "@/lib/auth/schemas"
 
 async function postJson<T>(url: string, body?: unknown): Promise<T> {
@@ -63,6 +64,20 @@ export function useRegister() {
     onSuccess: (data) => {
       queryClient.setQueryData(["auth", "session"], data.user)
       router.push("/auth/onboarding")
+      router.refresh()
+    },
+  })
+}
+
+export function useOnboarding() {
+  const router = useRouter()
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (input: OnboardingInput) =>
+      postJson<{ user: AuthUser }>("/api/auth/onboarding", input),
+    onSuccess: (data) => {
+      queryClient.setQueryData(["auth", "session"], data.user)
+      router.push("/overview")
       router.refresh()
     },
   })

@@ -20,7 +20,18 @@ export const resetPasswordSchema = z.object({
   password: z.string().min(8),
 })
 
+export const onboardingSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  password: z.string().min(8),
+  company: z.string().min(1),
+  website: z.string().optional(),
+  industry: z.string().min(1),
+  size: z.string().min(1),
+})
+
 export type LoginInput = z.infer<typeof loginSchema>
 export type RegisterInput = z.infer<typeof registerSchema>
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>
+export type OnboardingInput = z.infer<typeof onboardingSchema>

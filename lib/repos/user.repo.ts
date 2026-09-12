@@ -20,4 +20,12 @@ export const userRepo = {
       data,
     })
   },
+
+  async hasOwner() {
+    const owner = await db.user.findFirst({
+      where: { role: "OWNER" },
+      select: { id: true },
+    })
+    return !!owner
+  }
 }

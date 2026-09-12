@@ -15,7 +15,7 @@ export function Header({ activeSection }: HeaderProps) {
   const [searchFocused, setSearchFocused] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { resolvedTheme, setTheme } = useTheme()
-  const { data: user } = useSession()
+  const { data: user, isPending } = useSession()
   const logout = useLogout()
 
   useEffect(() => setMounted(true), [])
@@ -23,7 +23,7 @@ export function Header({ activeSection }: HeaderProps) {
   const isDark = resolvedTheme === "dark"
   const initials = user?.name
     ? user.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2)
-    : user?.email.substring(0, 2).toUpperCase() || "JD"
+    : user?.email?.substring(0, 2).toUpperCase() || ""
 
   return (
     <header className="h-16 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30 flex items-center justify-between px-6">
@@ -84,11 +84,16 @@ export function Header({ activeSection }: HeaderProps) {
           type="button"
           onClick={() => logout.mutate()}
           title="Click to logout"
+          disabled={isPending}
           className="w-9 h-9 rounded-lg overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 transition-all duration-200"
         >
-          <div className="w-full h-full bg-linear-to-br from-accent/80 to-chart-1 flex items-center justify-center text-xs font-semibold text-accent-foreground">
-            {initials}
-          </div>
+          {isPending ? (
+            <div className="w-full h-full bg-muted animate-pulse" />
+          ) : (
+            <div className="w-full h-full bg-linear-to-br from-accent/80 to-chart-1 flex items-center justify-center text-xs font-semibold text-accent-foreground">
+              {initials || "U"}
+            </div>
+          )}
         </button>
       </div>
     </header>
