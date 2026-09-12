@@ -1,16 +1,18 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Sidebar } from "@/components/dashboard/sidebar";
 import { Header } from "@/components/dashboard/header";
 import type { Section } from "@/lib/dashboard-config";
 
 interface DashboardShellProps {
-  activeSection: Section;
   children: React.ReactNode;
 }
 
-export function DashboardShell({ activeSection, children }: DashboardShellProps) {
+export function DashboardShell({ children }: DashboardShellProps) {
+  const pathname = usePathname();
+  const activeSection = (pathname.split("/")[1] || "overview") as Section;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
