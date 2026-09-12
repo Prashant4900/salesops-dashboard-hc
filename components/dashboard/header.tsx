@@ -2,8 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import { sectionTitles, type Section } from "@/lib/dashboard-config";
-import { Bell, Search, Calendar } from "lucide-react";
-import { useState } from "react";
+import { Bell, Search, Calendar, Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
 
 interface HeaderProps {
   activeSection: Section;
@@ -11,6 +12,12 @@ interface HeaderProps {
 
 export function Header({ activeSection }: HeaderProps) {
   const [searchFocused, setSearchFocused] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
+
+  useEffect(() => setMounted(true), []);
+
+  const isDark = resolvedTheme === "dark";
 
   return (
     <header className="h-16 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-30 flex items-center justify-between px-6">
@@ -41,6 +48,16 @@ export function Header({ activeSection }: HeaderProps) {
             className="w-full h-9 pl-9 pr-4 rounded-lg bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-accent transition-all duration-200"
           />
         </div>
+
+        {/* Theme toggle */}
+        <button
+          type="button"
+          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          onClick={() => setTheme(isDark ? "light" : "dark")}
+          className="relative w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
+        >
+          {mounted && (isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
+        </button>
 
         {/* Notifications */}
         <button className="relative w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200">
