@@ -1,48 +1,29 @@
 "use client";
 
-import React from "react";
-import LucideCircleDollarSignIcon from "lucide-react"; // Import the missing icon component
-
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import type { Section } from "@/app/page";
+import { navItems } from "@/lib/dashboard-config";
+import type { Section } from "@/lib/dashboard-config";
 import {
-  LayoutDashboard,
-  GitBranch,
-  Handshake,
-  Users,
-  BarChart3,
   ChevronLeft,
   ChevronRight,
   CircleDollarSign,
-  Building2,
-  TrendingUp,
-  Settings,
 } from "lucide-react";
 
 interface SidebarProps {
   activeSection: Section;
-  onSectionChange: (section: Section) => void;
   collapsed: boolean;
   onCollapsedChange: (collapsed: boolean) => void;
 }
 
-const navItems: { id: Section; label: string; icon: React.ElementType }[] = [
-  { id: "overview", label: "Overview", icon: LayoutDashboard },
-  { id: "pipeline", label: "Pipeline", icon: GitBranch },
-  { id: "deals", label: "Deals", icon: Handshake },
-  { id: "customers", label: "Customers", icon: Building2 },
-  { id: "team", label: "Team", icon: Users },
-  { id: "forecasting", label: "Forecasting", icon: TrendingUp },
-  { id: "reports", label: "Reports", icon: BarChart3 },
-  { id: "settings", label: "Settings", icon: Settings },
-];
-
 export function Sidebar({
   activeSection,
-  onSectionChange,
   collapsed,
   onCollapsedChange,
 }: SidebarProps) {
+  const pathname = usePathname();
+
   return (
     <aside
       className={cn(
@@ -71,12 +52,12 @@ export function Sidebar({
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-hidden">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = activeSection === item.id;
+          const isActive = pathname === item.href;
 
           return (
-            <button
+            <Link
               key={item.id}
-              onClick={() => onSectionChange(item.id)}
+              href={item.href}
               className={cn(
                 "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group relative",
                 isActive
@@ -105,7 +86,7 @@ export function Sidebar({
               >
                 {item.label}
               </span>
-            </button>
+            </Link>
           );
         })}
       </nav>

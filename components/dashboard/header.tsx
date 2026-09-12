@@ -1,21 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import type { Section } from "@/app/page";
+import { sectionTitles, type Section } from "@/lib/dashboard-config";
 import { Bell, Search, Calendar } from "lucide-react";
 import { useState } from "react";
 
 interface HeaderProps {
   activeSection: Section;
 }
-
-const sectionTitles: Record<Section, string> = {
-  overview: "Overview",
-  pipeline: "Pipeline",
-  deals: "Deals",
-  team: "Team Performance",
-  reports: "Reports",
-};
 
 export function Header({ activeSection }: HeaderProps) {
   const [searchFocused, setSearchFocused] = useState(false);
