@@ -18,7 +18,7 @@ export function Header({ activeSection }: HeaderProps) {
   const [searchFocused, setSearchFocused] = useState(false)
   const [mounted, setMounted] = useState(false)
   const { resolvedTheme, setTheme } = useTheme()
-  const { data: user, isPending } = useSession()
+  const { data: user } = useSession()
   const logout = useLogout()
 
   useEffect(() => setMounted(true), [])
@@ -93,10 +93,10 @@ export function Header({ activeSection }: HeaderProps) {
           type="button"
           onClick={() => logout.mutate()}
           title="Click to logout"
-          disabled={isPending}
+          disabled={logout.isPending}
           className="rounded-full overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 hover:bg-secondary p-0"
         >
-          {isPending ? (
+          {!mounted ? (
             <div className="w-full h-full bg-muted animate-pulse rounded-full" />
           ) : (
             <Avatar className="w-full h-full">

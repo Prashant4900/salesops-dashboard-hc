@@ -8,6 +8,12 @@ export const userRepo = {
     })
   },
 
+  async findById(id: string) {
+    return db.user.findUnique({
+      where: { id },
+    })
+  },
+
   async create(data: Prisma.UserCreateInput) {
     return db.user.create({
       data,
@@ -27,5 +33,6 @@ export const userRepo = {
       select: { id: true },
     })
     return !!owner
-  }
+  },
 }
+

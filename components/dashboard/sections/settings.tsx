@@ -3,20 +3,16 @@
 import {
   Bell,
   Check,
-  Database,
   ExternalLink,
-  Globe,
-  Key,
   Link2,
   Mail,
-  Palette,
   RefreshCw,
   Shield,
   Smartphone,
   User,
   Zap,
 } from "lucide-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -29,15 +25,9 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useSession, useUpdateProfile, useChangePassword } from "@/hooks/use-auth"
 
 const integrations = [
   {
@@ -125,11 +115,55 @@ const notificationSettings = [
 export function SettingsSection() {
   const [activeTab, setActiveTab] = useState("profile")
   const [notifications, setNotifications] = useState(notificationSettings)
-  const [isSaving, setIsSaving] = useState(false)
 
-  const handleSave = () => {
-    setIsSaving(true)
-    setTimeout(() => setIsSaving(false), 1500)
+  // ── Profile state ──────────────────────────────────────────
+  const { data: session } = useSession()
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const updateProfile = useUpdateProfile()
+  const profileError =
+    updateProfile.error instanceof Error ? updateProfile.error.message : ""
+  const profileSuccess = updateProfile.isSuccess
+
+  // Seed form with session data once loaded.
+  // Guard with ?? "" on every field so inputs are ALWAYS controlled (never undefined).
+  useEffect(() => {
+    if (session) {
+      setName(session.name ?? "")
+      setEmail(session.email ?? "")
+    }
+  }, [session])
+
+  // ── Password state ─────────────────────────────────────────
+  const [currentPassword, setCurrentPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const changePassword = useChangePassword()
+  const passwordError =
+    changePassword.error instanceof Error ? changePassword.error.message : ""
+  const passwordSuccess = changePassword.isSuccess
+
+  const passwordMismatch =
+    confirmPassword.length > 0 && newPassword !== confirmPassword
+
+  const handleSaveProfile = () => {
+    if (!name || !email) return
+    updateProfile.mutate({ name, email })
+  }
+
+  const handleChangePassword = () => {
+    if (!currentPassword || newPassword.length < 8 || newPassword !== confirmPassword)
+      return
+    changePassword.mutate(
+      { currentPassword, newPassword },
+      {
+        onSuccess: () => {
+          setCurrentPassword("")
+          setNewPassword("")
+          setConfirmPassword("")
+        },
+      },
+    )
   }
 
   const toggleNotification = (id: string, type: "email" | "push") => {
@@ -137,6 +171,16 @@ export function SettingsSection() {
       prev.map((n) => (n.id === id ? { ...n, [type]: !n[type] } : n)),
     )
   }
+
+  // Derive initials from current session
+  const initials = session?.name
+    ? session.name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2)
+    : session?.email?.substring(0, 2).toUpperCase() ?? "??"
 
   return (
     <div className="space-y-6">
@@ -160,7 +204,7 @@ export function SettingsSection() {
             <User className="w-4 h-4 mr-2" />
             Profile
           </TabsTrigger>
-          <TabsTrigger
+          {/* <TabsTrigger
             value="notifications"
             className="data-[state=active]:bg-card data-[state=active]:text-foreground"
           >
@@ -173,7 +217,7 @@ export function SettingsSection() {
           >
             <Link2 className="w-4 h-4 mr-2" />
             Integrations
-          </TabsTrigger>
+          </TabsTrigger> */}
           <TabsTrigger
             value="security"
             className="data-[state=active]:bg-card data-[state=active]:text-foreground"
@@ -183,7 +227,7 @@ export function SettingsSection() {
           </TabsTrigger>
         </TabsList>
 
-        {/* Profile Tab */}
+        {/* ── Profile Tab ────────────────────────────────────── */}
         <TabsContent
           value="profile"
           className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
@@ -194,14 +238,15 @@ export function SettingsSection() {
                 Personal Information
               </CardTitle>
               <CardDescription>
-                Update your personal details and preferences
+                Update your personal details
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Avatar row */}
               <div className="flex items-center gap-6">
                 <Avatar className="w-20 h-20 bg-secondary">
                   <AvatarFallback className="bg-accent text-accent-foreground text-2xl font-semibold">
-                    JD
+                    {initials}
                   </AvatarFallback>
                 </Avatar>
                 <div className="space-y-2">
@@ -214,146 +259,67 @@ export function SettingsSection() {
                 </div>
               </div>
 
+              {/* Fields */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="profile-name">Full name</Label>
                   <Input
-                    id="firstName"
-                    defaultValue="John"
+                    id="profile-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Your full name"
                     className="bg-secondary border-border focus:border-accent"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="profile-email">Email address</Label>
                   <Input
-                    id="lastName"
-                    defaultValue="Doe"
-                    className="bg-secondary border-border focus:border-accent"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
+                    id="profile-email"
                     type="email"
-                    defaultValue="john.doe@company.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@company.com"
                     className="bg-secondary border-border focus:border-accent"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="role">Role</Label>
-                  <Select defaultValue="manager">
-                    <SelectTrigger className="bg-secondary border-border">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="admin">Administrator</SelectItem>
-                      <SelectItem value="manager">Sales Manager</SelectItem>
-                      <SelectItem value="rep">Sales Representative</SelectItem>
-                      <SelectItem value="viewer">Viewer</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="timezone">Timezone</Label>
-                <Select defaultValue="pst">
-                  <SelectTrigger className="bg-secondary border-border w-full md:w-[300px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pst">Pacific Time (PT)</SelectItem>
-                    <SelectItem value="mst">Mountain Time (MT)</SelectItem>
-                    <SelectItem value="cst">Central Time (CT)</SelectItem>
-                    <SelectItem value="est">Eastern Time (ET)</SelectItem>
-                    <SelectItem value="utc">UTC</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border bg-card">
-            <CardHeader>
-              <CardTitle className="text-base font-medium">
-                Display Preferences
-              </CardTitle>
-              <CardDescription>Customize how data is displayed</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Palette className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">Dark Mode</p>
-                    <p className="text-sm text-muted-foreground">
-                      Use dark theme for the interface
-                    </p>
-                  </div>
-                </div>
-                <Switch defaultChecked />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Globe className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">
-                      Currency Format
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Display currency in your locale
-                    </p>
-                  </div>
-                </div>
-                <Select defaultValue="usd">
-                  <SelectTrigger className="w-[120px] bg-secondary border-border">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="usd">USD ($)</SelectItem>
-                    <SelectItem value="eur">EUR (€)</SelectItem>
-                    <SelectItem value="gbp">GBP (£)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Database className="w-5 h-5 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-foreground">Compact View</p>
-                    <p className="text-sm text-muted-foreground">
-                      Show more data in less space
-                    </p>
-                  </div>
-                </div>
-                <Switch />
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="flex justify-end">
-            <Button
-              onClick={handleSave}
-              className="bg-accent hover:bg-accent/90 text-accent-foreground"
-              disabled={isSaving}
-            >
-              {isSaving ? (
-                <>
-                  <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Save Changes
-                </>
+              {/* Feedback */}
+              {profileError && (
+                <p className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                  {profileError}
+                </p>
               )}
-            </Button>
-          </div>
+              {profileSuccess && (
+                <p className="rounded-lg border border-accent/30 bg-accent/10 p-3 text-sm text-accent">
+                  Profile updated successfully.
+                </p>
+              )}
+
+              <div className="flex justify-end">
+                <Button
+                  onClick={handleSaveProfile}
+                  className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                  disabled={updateProfile.isPending || !name || !email}
+                >
+                  {updateProfile.isPending ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Check className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
-        {/* Notifications Tab */}
+        {/* ── Notifications Tab ──────────────────────────────── */}
         <TabsContent
           value="notifications"
           className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
@@ -417,7 +383,7 @@ export function SettingsSection() {
           </Card>
         </TabsContent>
 
-        {/* Integrations Tab */}
+        {/* ── Integrations Tab ───────────────────────────────── */}
         <TabsContent
           value="integrations"
           className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
@@ -436,26 +402,23 @@ export function SettingsSection() {
                 {integrations.map((integration, index) => (
                   <div
                     key={integration.id}
-                    className={`p-4 rounded-lg border transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 ${
-                      integration.connected
+                    className={`p-4 rounded-lg border transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 ${integration.connected
                         ? "bg-secondary/50 border-border hover:border-accent/50"
                         : "bg-secondary/20 border-border hover:border-muted-foreground/30"
-                    }`}
+                      }`}
                     style={{ animationDelay: `${index * 75}ms` }}
                   >
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
                         <div
-                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                            integration.connected ? "bg-accent/20" : "bg-muted"
-                          }`}
+                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${integration.connected ? "bg-accent/20" : "bg-muted"
+                            }`}
                         >
                           <Zap
-                            className={`w-5 h-5 ${
-                              integration.connected
+                            className={`w-5 h-5 ${integration.connected
                                 ? "text-accent"
                                 : "text-muted-foreground"
-                            }`}
+                              }`}
                           />
                         </div>
                         <div>
@@ -519,7 +482,7 @@ export function SettingsSection() {
           </Card>
         </TabsContent>
 
-        {/* Security Tab */}
+        {/* ── Security Tab ───────────────────────────────────── */}
         <TabsContent
           value="security"
           className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
@@ -527,145 +490,102 @@ export function SettingsSection() {
           <Card className="border-border bg-card">
             <CardHeader>
               <CardTitle className="text-base font-medium">
-                Password & Authentication
+                Change Password
               </CardTitle>
               <CardDescription>
-                Manage your account security settings
+                Update your password to keep your account secure
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="currentPassword">Current Password</Label>
-                  <Input
-                    id="currentPassword"
-                    type="password"
-                    className="bg-secondary border-border focus:border-accent max-w-md"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="newPassword">New Password</Label>
-                  <Input
-                    id="newPassword"
-                    type="password"
-                    className="bg-secondary border-border focus:border-accent max-w-md"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    type="password"
-                    className="bg-secondary border-border focus:border-accent max-w-md"
-                  />
-                </div>
-                <Button variant="outline">Update Password</Button>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword">Current Password</Label>
+                <Input
+                  id="currentPassword"
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  className="bg-secondary border-border focus:border-accent max-w-md"
+                  placeholder="Enter current password"
+                />
               </div>
-            </CardContent>
-          </Card>
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">New Password</Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="bg-secondary border-border focus:border-accent max-w-md"
+                  placeholder="At least 8 characters"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="bg-secondary border-border focus:border-accent max-w-md"
+                  placeholder="Re-enter new password"
+                />
+                {passwordMismatch && (
+                  <p className="text-xs text-destructive">
+                    Passwords do not match.
+                  </p>
+                )}
+              </div>
 
-          <Card className="border-border bg-card">
-            <CardHeader>
-              <CardTitle className="text-base font-medium">
-                Two-Factor Authentication
-              </CardTitle>
-              <CardDescription>
-                Add an extra layer of security to your account
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between p-4 rounded-lg bg-secondary/50 border border-border">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center">
-                    <Key className="w-5 h-5 text-accent" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-foreground">
-                      Authenticator App
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      Use an authenticator app for 2FA codes
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Badge className="bg-accent/20 text-accent border-accent/30">
-                    Enabled
-                  </Badge>
-                  <Button variant="outline" size="sm">
-                    Manage
-                  </Button>
-                </div>
+              {/* Strength hints */}
+              <div className="space-y-1 text-xs text-muted-foreground max-w-md">
+                <p className={newPassword.length >= 8 ? "text-accent" : ""}>
+                  • At least 8 characters
+                </p>
+                <p
+                  className={
+                    confirmPassword && newPassword === confirmPassword
+                      ? "text-accent"
+                      : ""
+                  }
+                >
+                  • Passwords match
+                </p>
               </div>
-            </CardContent>
-          </Card>
 
-          <Card className="border-border bg-card">
-            <CardHeader>
-              <CardTitle className="text-base font-medium">
-                Active Sessions
-              </CardTitle>
-              <CardDescription>
-                Manage devices where you&apos;re signed in
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                {[
-                  {
-                    device: "MacBook Pro",
-                    location: "San Francisco, CA",
-                    current: true,
-                    time: "Now",
-                  },
-                  {
-                    device: "iPhone 15",
-                    location: "San Francisco, CA",
-                    current: false,
-                    time: "2 hours ago",
-                  },
-                  {
-                    device: "Chrome on Windows",
-                    location: "New York, NY",
-                    current: false,
-                    time: "1 day ago",
-                  },
-                ].map((session) => (
-                  <div
-                    key={session.device}
-                    className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 border border-border animate-in fade-in slide-in-from-left-2"
-                    style={{ animationDelay: "0ms" }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-                        <Globe className="w-4 h-4 text-muted-foreground" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          {session.device}
-                          {session.current && (
-                            <Badge className="ml-2 bg-accent/20 text-accent border-accent/30 text-xs">
-                              Current
-                            </Badge>
-                          )}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {session.location} • {session.time}
-                        </p>
-                      </div>
-                    </div>
-                    {!session.current && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-destructive hover:text-destructive"
-                      >
-                        Revoke
-                      </Button>
-                    )}
-                  </div>
-                ))}
-              </div>
+              {/* Feedback */}
+              {passwordError && (
+                <p className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive max-w-md">
+                  {passwordError}
+                </p>
+              )}
+              {passwordSuccess && (
+                <p className="rounded-lg border border-accent/30 bg-accent/10 p-3 text-sm text-accent max-w-md">
+                  Password changed successfully.
+                </p>
+              )}
+
+              <Button
+                onClick={handleChangePassword}
+                className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                disabled={
+                  changePassword.isPending ||
+                  !currentPassword ||
+                  newPassword.length < 8 ||
+                  newPassword !== confirmPassword
+                }
+              >
+                {changePassword.isPending ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4 mr-2" />
+                    Update Password
+                  </>
+                )}
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>

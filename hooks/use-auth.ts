@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
 
@@ -7,47 +8,58 @@ import type {
   RegisterInput,
   ResetPasswordInput,
   OnboardingInput,
+  UpdateProfileInput,
+  ChangePasswordInput,
 } from "@/lib/auth/schemas"
+import { authApi, userApi } from "@/lib/clients/api"
+import type { AuthUser } from "@/lib/clients/api"
+import { userCache } from "@/lib/store/user-cache"
 
-async function postJson<T>(url: string, body?: unknown): Promise<T> {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  })
-  const data = await res.json().catch(() => ({}))
-  if (!res.ok)
-    throw new Error((data as { error?: string }).error ?? "Request failed.")
-  return data as T
-}
+export type { AuthUser }
 
-export type AuthUser = {
-  id: string
-  name: string | null
-  email: string
-  role: string
-}
+// ── Session ────────────────────────────────────────────────────────────────
 
 export function useSession() {
+  const queryClient = useQueryClient()
+
+  // Seed the React Query cache from localStorage AFTER hydration (client-only).
+  // Using useEffect ensures server and client render identically on first paint,
+  // avoiding hydration mismatches. The background API fetch still validates.
+  useEffect(() => {
+    const existing = queryClient.getQueryData<AuthUser | null>(["auth", "session"])
+    if (existing === undefined) {
+      const cached = userCache.get()
+      if (cached) {
+        queryClient.setQueryData(["auth", "session"], cached)
+      }
+    }
+  }, [queryClient])
+
   return useQuery({
     queryKey: ["auth", "session"],
     queryFn: async () => {
-      const res = await fetch("/api/auth/session")
-      if (res.status === 401) return null
-      if (!res.ok) throw new Error("Failed to load session.")
-      return ((await res.json()) as { user: AuthUser }).user
+      try {
+        const data = await authApi.getSession()
+        userCache.set(data.user)
+        return data.user
+      } catch {
+        userCache.clear()
+        return null
+      }
     },
     staleTime: 60_000,
   })
 }
 
+// ── Auth mutations ─────────────────────────────────────────────────────────
+
 export function useLogin() {
   const router = useRouter()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (input: LoginInput) =>
-      postJson<{ user: AuthUser }>("/api/auth/login", input),
+    mutationFn: (input: LoginInput) => authApi.login(input),
     onSuccess: (data) => {
+      userCache.set(data.user)
       queryClient.setQueryData(["auth", "session"], data.user)
       router.push("/overview")
       router.refresh()
@@ -59,9 +71,9 @@ export function useRegister() {
   const router = useRouter()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (input: RegisterInput) =>
-      postJson<{ user: AuthUser }>("/api/auth/register", input),
+    mutationFn: (input: RegisterInput) => authApi.register(input),
     onSuccess: (data) => {
+      userCache.set(data.user)
       queryClient.setQueryData(["auth", "session"], data.user)
       router.push("/auth/onboarding")
       router.refresh()
@@ -73,9 +85,9 @@ export function useOnboarding() {
   const router = useRouter()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (input: OnboardingInput) =>
-      postJson<{ user: AuthUser }>("/api/auth/onboarding", input),
+    mutationFn: (input: OnboardingInput) => authApi.onboarding(input),
     onSuccess: (data) => {
+      userCache.set(data.user)
       queryClient.setQueryData(["auth", "session"], data.user)
       router.push("/overview")
       router.refresh()
@@ -85,15 +97,13 @@ export function useOnboarding() {
 
 export function useForgotPassword() {
   return useMutation({
-    mutationFn: (input: ForgotPasswordInput) =>
-      postJson<{ sent: boolean }>("/api/auth/forgot-password", input),
+    mutationFn: (input: ForgotPasswordInput) => authApi.forgotPassword(input),
   })
 }
 
 export function useResetPassword() {
   return useMutation({
-    mutationFn: (input: ResetPasswordInput) =>
-      postJson<{ ok: boolean }>("/api/auth/reset-password", input),
+    mutationFn: (input: ResetPasswordInput) => authApi.resetPassword(input),
   })
 }
 
@@ -101,12 +111,36 @@ export function useLogout() {
   const router = useRouter()
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: () => postJson<{ ok: boolean }>("/api/auth/session"),
+    mutationFn: () => authApi.logout(),
     onSuccess: () => {
+      // Wipe local cache immediately so the next page load starts fresh.
+      userCache.clear()
       queryClient.setQueryData(["auth", "session"], null)
       queryClient.removeQueries({ queryKey: ["auth"] })
       router.push("/auth/login")
       router.refresh()
     },
+  })
+}
+
+// ── User mutations ─────────────────────────────────────────────────────────
+
+export function useUpdateProfile() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (input: UpdateProfileInput) => userApi.updateProfile(input),
+    onSuccess: (data) => {
+      // Persist the updated name/email so the next page load reflects changes.
+      userCache.set(data.user)
+      queryClient.setQueryData(["auth", "session"], (old: AuthUser | null) =>
+        old ? { ...old, name: data.user.name, email: data.user.email } : old,
+      )
+    },
+  })
+}
+
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: (input: ChangePasswordInput) => userApi.changePassword(input),
   })
 }

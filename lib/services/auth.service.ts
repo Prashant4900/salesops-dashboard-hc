@@ -9,6 +9,8 @@ import type {
   RegisterInput,
   ResetPasswordInput,
   OnboardingInput,
+  UpdateProfileInput,
+  ChangePasswordInput,
 } from "@/lib/auth/schemas"
 import type { Role } from "@/lib/generated/prisma/enums"
 import { userRepo } from "@/lib/repos/user.repo"
@@ -46,10 +48,9 @@ export async function onboardOwner(input: OnboardingInput) {
   }
 
   const passwordHash = await bcrypt.hash(input.password, HASH_ROUNDS)
-  
-  // Use a simple slug for the business based on the company name
+
   const slug = input.company.toLowerCase().replace(/[^a-z0-9]+/g, "-")
-  
+
   const { user } = await businessRepo.createOwnerAndBusiness({
     user: {
       name: input.name,
@@ -62,9 +63,9 @@ export async function onboardOwner(input: OnboardingInput) {
       website: input.website || null,
       industry: input.industry,
       size: input.size,
-    }
+    },
   })
-  
+
   return { id: user.id, name: user.name, email: user.email, role: user.role }
 }
 
@@ -80,7 +81,6 @@ export async function authenticateUser(input: LoginInput) {
 
 export async function requestPasswordReset(input: ForgotPasswordInput) {
   const user = await userRepo.findByEmail(input.email)
-  // Same response either way to avoid leaking which emails exist.
   if (!user) return { sent: true }
 
   const token = randomBytes(32).toString("hex")
@@ -89,7 +89,6 @@ export async function requestPasswordReset(input: ForgotPasswordInput) {
     user: { connect: { id: user.id } },
     expiresAt: addHours(new Date(), 1),
   })
-  // Email delivery is out of scope here; the token is returned for dev/testing.
   return { sent: true, token }
 }
 
@@ -100,5 +99,33 @@ export async function resetPassword(input: ResetPasswordInput) {
 
   const passwordHash = await bcrypt.hash(input.password, HASH_ROUNDS)
   await tokenRepo.executeResetTransaction(record.userId, passwordHash, input.token)
+  return { ok: true }
+}
+
+export async function updateProfile(userId: string, input: UpdateProfileInput) {
+  const existing = await userRepo.findByEmail(input.email)
+  if (existing && existing.id !== userId) {
+    throw new AuthError("This email is already in use by another account.")
+  }
+
+  const user = await userRepo.update(userId, {
+    name: input.name,
+    email: input.email.toLowerCase(),
+  })
+  return { id: user.id, name: user.name, email: user.email, role: user.role }
+}
+
+export async function changePassword(
+  userId: string,
+  input: ChangePasswordInput,
+) {
+  const user = await userRepo.findById(userId)
+  if (!user) throw new AuthError("User not found.")
+
+  const valid = await bcrypt.compare(input.currentPassword, user.password)
+  if (!valid) throw new AuthError("Current password is incorrect.")
+
+  const passwordHash = await bcrypt.hash(input.newPassword, HASH_ROUNDS)
+  await userRepo.update(userId, { password: passwordHash })
   return { ok: true }
 }
