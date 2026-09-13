@@ -28,6 +28,9 @@ export const userRepo = {
   },
 
   async hasOwner() {
+    // Keep the UI preview usable when the optional database integration is not configured.
+    if (!process.env.DATABASE_URL) return true
+
     const owner = await db.user.findFirst({
       where: { role: "OWNER" },
       select: { id: true },
