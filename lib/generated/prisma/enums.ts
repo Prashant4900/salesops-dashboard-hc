@@ -37,3 +37,12 @@ export const DealStage = {
 } as const
 
 export type DealStage = (typeof DealStage)[keyof typeof DealStage]
+
+
+export const CustomerTier = {
+  ENTERPRISE: 'ENTERPRISE',
+  GROWTH: 'GROWTH',
+  STARTER: 'STARTER'
+} as const
+
+export type CustomerTier = (typeof CustomerTier)[keyof typeof CustomerTier]

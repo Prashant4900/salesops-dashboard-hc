@@ -46,8 +46,9 @@ model Business {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  members User[]
-  deals   Deal[]
+  members   User[]
+  deals     Deal[]
+  customers Customer[]
 }
 
 model PasswordResetToken {
@@ -78,6 +79,36 @@ enum DealStage {
   CLOSED_LOST
 }
 
+enum CustomerTier {
+  ENTERPRISE
+  GROWTH
+  STARTER
+}
+
+model Customer {
+  id          String       @id @default(cuid())
+  name        String
+  industry    String
+  tier        CustomerTier @default(STARTER)
+  location    String?
+  website     String?
+  contact     String
+  email       String
+  phone       String?
+  healthScore Int          @default(50)
+  notes       String?
+
+  businessId  String
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  business    Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  deals       Deal[]
+
+  @@index([businessId])
+}
+
 model Deal {
   id          String     @id @default(cuid())
   companyName String
@@ -88,6 +119,7 @@ model Deal {
   
   userId      String
   businessId  String
+  customerId  String?
   
   closedAt    DateTime?
   createdAt   DateTime   @default(now())
@@ -95,7 +127,9 @@ model Deal {
 
   user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   business    Business   @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer    Customer?  @relation(fields: [customerId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([businessId])
+  @@index([customerId])
 }

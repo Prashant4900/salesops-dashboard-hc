@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   Business: 'Business',
   PasswordResetToken: 'PasswordResetToken',
+  Customer: 'Customer',
   Deal: 'Deal'
 } as const
 
@@ -115,6 +116,26 @@ export const PasswordResetTokenScalarFieldEnum = {
 export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
 
 
+export const CustomerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  industry: 'industry',
+  tier: 'tier',
+  location: 'location',
+  website: 'website',
+  contact: 'contact',
+  email: 'email',
+  phone: 'phone',
+  healthScore: 'healthScore',
+  notes: 'notes',
+  businessId: 'businessId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CustomerScalarFieldEnum = (typeof CustomerScalarFieldEnum)[keyof typeof CustomerScalarFieldEnum]
+
+
 export const DealScalarFieldEnum = {
   id: 'id',
   companyName: 'companyName',
@@ -124,6 +145,7 @@ export const DealScalarFieldEnum = {
   probability: 'probability',
   userId: 'userId',
   businessId: 'businessId',
+  customerId: 'customerId',
   closedAt: 'closedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

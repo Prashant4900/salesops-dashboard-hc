@@ -11,5 +11,6 @@
 export type * from './models/User'
 export type * from './models/Business'
 export type * from './models/PasswordResetToken'
+export type * from './models/Customer'
 export type * from './models/Deal'
 export type * from './commonInputTypes'

@@ -196,3 +196,59 @@ export const dealsApi = {
   delete: (id: string): Promise<{ ok: boolean }> =>
     request(`/api/deals/${id}`, "DELETE"),
 }
+
+// ── Customers endpoints ────────────────────────────────────────────────────
+
+export type CustomerTier = "Enterprise" | "Growth" | "Starter"
+
+export type Customer = {
+  id: string
+  name: string
+  industry: string
+  tier: CustomerTier
+  location: string | null
+  website: string | null
+  contact: string
+  email: string
+  phone: string | null
+  healthScore: number
+  notes: string | null
+  totalRevenue: number
+  activeDeals: number
+  dealCount: number
+  lastContact: string
+  businessId: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type CreateCustomerInput = {
+  name: string
+  industry: string
+  tier?: "ENTERPRISE" | "GROWTH" | "STARTER"
+  location?: string
+  website?: string
+  contact: string
+  email: string
+  phone?: string
+  healthScore?: number
+  notes?: string
+}
+
+export type UpdateCustomerInput = Partial<CreateCustomerInput>
+
+export const customersApi = {
+  getAll: (): Promise<{ customers: Customer[] }> =>
+    request("/api/customers", "GET"),
+
+  create: (input: CreateCustomerInput): Promise<{ customer: Customer }> =>
+    post("/api/customers", input),
+
+  update: (
+    id: string,
+    input: UpdateCustomerInput,
+  ): Promise<{ customer: Customer }> => patch(`/api/customers/${id}`, input),
+
+  delete: (id: string): Promise<{ ok: boolean }> =>
+    request(`/api/customers/${id}`, "DELETE"),
+}

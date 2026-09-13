@@ -45,6 +45,7 @@ export type DealMinAggregateOutputType = {
   probability: number | null
   userId: string | null
   businessId: string | null
+  customerId: string | null
   closedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -59,6 +60,7 @@ export type DealMaxAggregateOutputType = {
   probability: number | null
   userId: string | null
   businessId: string | null
+  customerId: string | null
   closedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -73,6 +75,7 @@ export type DealCountAggregateOutputType = {
   probability: number
   userId: number
   businessId: number
+  customerId: number
   closedAt: number
   createdAt: number
   updatedAt: number
@@ -99,6 +102,7 @@ export type DealMinAggregateInputType = {
   probability?: true
   userId?: true
   businessId?: true
+  customerId?: true
   closedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -113,6 +117,7 @@ export type DealMaxAggregateInputType = {
   probability?: true
   userId?: true
   businessId?: true
+  customerId?: true
   closedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -127,6 +132,7 @@ export type DealCountAggregateInputType = {
   probability?: true
   userId?: true
   businessId?: true
+  customerId?: true
   closedAt?: true
   createdAt?: true
   updatedAt?: true
@@ -228,6 +234,7 @@ export type DealGroupByOutputType = {
   probability: number
   userId: string
   businessId: string
+  customerId: string | null
   closedAt: Date | null
   createdAt: Date
   updatedAt: Date
@@ -265,11 +272,13 @@ export type DealWhereInput = {
   probability?: Prisma.IntFilter<"Deal"> | number
   userId?: Prisma.StringFilter<"Deal"> | string
   businessId?: Prisma.StringFilter<"Deal"> | string
+  customerId?: Prisma.StringNullableFilter<"Deal"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   business?: Prisma.XOR<Prisma.BusinessScalarRelationFilter, Prisma.BusinessWhereInput>
+  customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
 }
 
 export type DealOrderByWithRelationInput = {
@@ -281,11 +290,13 @@ export type DealOrderByWithRelationInput = {
   probability?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   businessId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   business?: Prisma.BusinessOrderByWithRelationInput
+  customer?: Prisma.CustomerOrderByWithRelationInput
 }
 
 export type DealWhereUniqueInput = Prisma.AtLeast<{
@@ -300,11 +311,13 @@ export type DealWhereUniqueInput = Prisma.AtLeast<{
   probability?: Prisma.IntFilter<"Deal"> | number
   userId?: Prisma.StringFilter<"Deal"> | string
   businessId?: Prisma.StringFilter<"Deal"> | string
+  customerId?: Prisma.StringNullableFilter<"Deal"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   business?: Prisma.XOR<Prisma.BusinessScalarRelationFilter, Prisma.BusinessWhereInput>
+  customer?: Prisma.XOR<Prisma.CustomerNullableScalarRelationFilter, Prisma.CustomerWhereInput> | null
 }, "id">
 
 export type DealOrderByWithAggregationInput = {
@@ -316,6 +329,7 @@ export type DealOrderByWithAggregationInput = {
   probability?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   businessId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrderInput | Prisma.SortOrder
   closedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -338,6 +352,7 @@ export type DealScalarWhereWithAggregatesInput = {
   probability?: Prisma.IntWithAggregatesFilter<"Deal"> | number
   userId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
   businessId?: Prisma.StringWithAggregatesFilter<"Deal"> | string
+  customerId?: Prisma.StringNullableWithAggregatesFilter<"Deal"> | string | null
   closedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Deal"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Deal"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Deal"> | Date | string
@@ -355,6 +370,7 @@ export type DealCreateInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDealsInput
   business: Prisma.BusinessCreateNestedOneWithoutDealsInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutDealsInput
 }
 
 export type DealUncheckedCreateInput = {
@@ -366,6 +382,7 @@ export type DealUncheckedCreateInput = {
   probability?: number
   userId: string
   businessId: string
+  customerId?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -383,6 +400,7 @@ export type DealUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDealsNestedInput
   business?: Prisma.BusinessUpdateOneRequiredWithoutDealsNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutDealsNestedInput
 }
 
 export type DealUncheckedUpdateInput = {
@@ -394,6 +412,7 @@ export type DealUncheckedUpdateInput = {
   probability?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   businessId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -408,6 +427,7 @@ export type DealCreateManyInput = {
   probability?: number
   userId: string
   businessId: string
+  customerId?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -434,6 +454,7 @@ export type DealUncheckedUpdateManyInput = {
   probability?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   businessId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -458,6 +479,7 @@ export type DealCountOrderByAggregateInput = {
   probability?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   businessId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -477,6 +499,7 @@ export type DealMaxOrderByAggregateInput = {
   probability?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   businessId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -491,6 +514,7 @@ export type DealMinOrderByAggregateInput = {
   probability?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   businessId?: Prisma.SortOrder
+  customerId?: Prisma.SortOrder
   closedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -585,20 +609,54 @@ export type DealUncheckedUpdateManyWithoutBusinessNestedInput = {
   deleteMany?: Prisma.DealScalarWhereInput | Prisma.DealScalarWhereInput[]
 }
 
+export type DealCreateNestedManyWithoutCustomerInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutCustomerInput, Prisma.DealUncheckedCreateWithoutCustomerInput> | Prisma.DealCreateWithoutCustomerInput[] | Prisma.DealUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutCustomerInput | Prisma.DealCreateOrConnectWithoutCustomerInput[]
+  createMany?: Prisma.DealCreateManyCustomerInputEnvelope
+  connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+}
+
+export type DealUncheckedCreateNestedManyWithoutCustomerInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutCustomerInput, Prisma.DealUncheckedCreateWithoutCustomerInput> | Prisma.DealCreateWithoutCustomerInput[] | Prisma.DealUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutCustomerInput | Prisma.DealCreateOrConnectWithoutCustomerInput[]
+  createMany?: Prisma.DealCreateManyCustomerInputEnvelope
+  connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+}
+
+export type DealUpdateManyWithoutCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutCustomerInput, Prisma.DealUncheckedCreateWithoutCustomerInput> | Prisma.DealCreateWithoutCustomerInput[] | Prisma.DealUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutCustomerInput | Prisma.DealCreateOrConnectWithoutCustomerInput[]
+  upsert?: Prisma.DealUpsertWithWhereUniqueWithoutCustomerInput | Prisma.DealUpsertWithWhereUniqueWithoutCustomerInput[]
+  createMany?: Prisma.DealCreateManyCustomerInputEnvelope
+  set?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  disconnect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  delete?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  update?: Prisma.DealUpdateWithWhereUniqueWithoutCustomerInput | Prisma.DealUpdateWithWhereUniqueWithoutCustomerInput[]
+  updateMany?: Prisma.DealUpdateManyWithWhereWithoutCustomerInput | Prisma.DealUpdateManyWithWhereWithoutCustomerInput[]
+  deleteMany?: Prisma.DealScalarWhereInput | Prisma.DealScalarWhereInput[]
+}
+
+export type DealUncheckedUpdateManyWithoutCustomerNestedInput = {
+  create?: Prisma.XOR<Prisma.DealCreateWithoutCustomerInput, Prisma.DealUncheckedCreateWithoutCustomerInput> | Prisma.DealCreateWithoutCustomerInput[] | Prisma.DealUncheckedCreateWithoutCustomerInput[]
+  connectOrCreate?: Prisma.DealCreateOrConnectWithoutCustomerInput | Prisma.DealCreateOrConnectWithoutCustomerInput[]
+  upsert?: Prisma.DealUpsertWithWhereUniqueWithoutCustomerInput | Prisma.DealUpsertWithWhereUniqueWithoutCustomerInput[]
+  createMany?: Prisma.DealCreateManyCustomerInputEnvelope
+  set?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  disconnect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  delete?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  connect?: Prisma.DealWhereUniqueInput | Prisma.DealWhereUniqueInput[]
+  update?: Prisma.DealUpdateWithWhereUniqueWithoutCustomerInput | Prisma.DealUpdateWithWhereUniqueWithoutCustomerInput[]
+  updateMany?: Prisma.DealUpdateManyWithWhereWithoutCustomerInput | Prisma.DealUpdateManyWithWhereWithoutCustomerInput[]
+  deleteMany?: Prisma.DealScalarWhereInput | Prisma.DealScalarWhereInput[]
+}
+
 export type EnumDealStatusFieldUpdateOperationsInput = {
   set?: $Enums.DealStatus
 }
 
 export type EnumDealStageFieldUpdateOperationsInput = {
   set?: $Enums.DealStage
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type DealCreateWithoutUserInput = {
@@ -612,6 +670,7 @@ export type DealCreateWithoutUserInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   business: Prisma.BusinessCreateNestedOneWithoutDealsInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutDealsInput
 }
 
 export type DealUncheckedCreateWithoutUserInput = {
@@ -622,6 +681,7 @@ export type DealUncheckedCreateWithoutUserInput = {
   stage?: $Enums.DealStage
   probability?: number
   businessId: string
+  customerId?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -665,6 +725,7 @@ export type DealScalarWhereInput = {
   probability?: Prisma.IntFilter<"Deal"> | number
   userId?: Prisma.StringFilter<"Deal"> | string
   businessId?: Prisma.StringFilter<"Deal"> | string
+  customerId?: Prisma.StringNullableFilter<"Deal"> | string | null
   closedAt?: Prisma.DateTimeNullableFilter<"Deal"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Deal"> | Date | string
@@ -681,6 +742,7 @@ export type DealCreateWithoutBusinessInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutDealsInput
+  customer?: Prisma.CustomerCreateNestedOneWithoutDealsInput
 }
 
 export type DealUncheckedCreateWithoutBusinessInput = {
@@ -691,6 +753,7 @@ export type DealUncheckedCreateWithoutBusinessInput = {
   stage?: $Enums.DealStage
   probability?: number
   userId: string
+  customerId?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -722,6 +785,60 @@ export type DealUpdateManyWithWhereWithoutBusinessInput = {
   data: Prisma.XOR<Prisma.DealUpdateManyMutationInput, Prisma.DealUncheckedUpdateManyWithoutBusinessInput>
 }
 
+export type DealCreateWithoutCustomerInput = {
+  id?: string
+  companyName: string
+  value: number
+  status?: $Enums.DealStatus
+  stage?: $Enums.DealStage
+  probability?: number
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutDealsInput
+  business: Prisma.BusinessCreateNestedOneWithoutDealsInput
+}
+
+export type DealUncheckedCreateWithoutCustomerInput = {
+  id?: string
+  companyName: string
+  value: number
+  status?: $Enums.DealStatus
+  stage?: $Enums.DealStage
+  probability?: number
+  userId: string
+  businessId: string
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DealCreateOrConnectWithoutCustomerInput = {
+  where: Prisma.DealWhereUniqueInput
+  create: Prisma.XOR<Prisma.DealCreateWithoutCustomerInput, Prisma.DealUncheckedCreateWithoutCustomerInput>
+}
+
+export type DealCreateManyCustomerInputEnvelope = {
+  data: Prisma.DealCreateManyCustomerInput | Prisma.DealCreateManyCustomerInput[]
+  skipDuplicates?: boolean
+}
+
+export type DealUpsertWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.DealWhereUniqueInput
+  update: Prisma.XOR<Prisma.DealUpdateWithoutCustomerInput, Prisma.DealUncheckedUpdateWithoutCustomerInput>
+  create: Prisma.XOR<Prisma.DealCreateWithoutCustomerInput, Prisma.DealUncheckedCreateWithoutCustomerInput>
+}
+
+export type DealUpdateWithWhereUniqueWithoutCustomerInput = {
+  where: Prisma.DealWhereUniqueInput
+  data: Prisma.XOR<Prisma.DealUpdateWithoutCustomerInput, Prisma.DealUncheckedUpdateWithoutCustomerInput>
+}
+
+export type DealUpdateManyWithWhereWithoutCustomerInput = {
+  where: Prisma.DealScalarWhereInput
+  data: Prisma.XOR<Prisma.DealUpdateManyMutationInput, Prisma.DealUncheckedUpdateManyWithoutCustomerInput>
+}
+
 export type DealCreateManyUserInput = {
   id?: string
   companyName: string
@@ -730,6 +847,7 @@ export type DealCreateManyUserInput = {
   stage?: $Enums.DealStage
   probability?: number
   businessId: string
+  customerId?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -746,6 +864,7 @@ export type DealUpdateWithoutUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   business?: Prisma.BusinessUpdateOneRequiredWithoutDealsNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutDealsNestedInput
 }
 
 export type DealUncheckedUpdateWithoutUserInput = {
@@ -756,6 +875,7 @@ export type DealUncheckedUpdateWithoutUserInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   probability?: Prisma.IntFieldUpdateOperationsInput | number
   businessId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -769,6 +889,7 @@ export type DealUncheckedUpdateManyWithoutUserInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   probability?: Prisma.IntFieldUpdateOperationsInput | number
   businessId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -782,6 +903,7 @@ export type DealCreateManyBusinessInput = {
   stage?: $Enums.DealStage
   probability?: number
   userId: string
+  customerId?: string | null
   closedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -798,6 +920,7 @@ export type DealUpdateWithoutBusinessInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutDealsNestedInput
+  customer?: Prisma.CustomerUpdateOneWithoutDealsNestedInput
 }
 
 export type DealUncheckedUpdateWithoutBusinessInput = {
@@ -808,6 +931,7 @@ export type DealUncheckedUpdateWithoutBusinessInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   probability?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -821,6 +945,63 @@ export type DealUncheckedUpdateManyWithoutBusinessInput = {
   stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
   probability?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DealCreateManyCustomerInput = {
+  id?: string
+  companyName: string
+  value: number
+  status?: $Enums.DealStatus
+  stage?: $Enums.DealStage
+  probability?: number
+  userId: string
+  businessId: string
+  closedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type DealUpdateWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
+  probability?: Prisma.IntFieldUpdateOperationsInput | number
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutDealsNestedInput
+  business?: Prisma.BusinessUpdateOneRequiredWithoutDealsNestedInput
+}
+
+export type DealUncheckedUpdateWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
+  probability?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  businessId?: Prisma.StringFieldUpdateOperationsInput | string
+  closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type DealUncheckedUpdateManyWithoutCustomerInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  companyName?: Prisma.StringFieldUpdateOperationsInput | string
+  value?: Prisma.FloatFieldUpdateOperationsInput | number
+  status?: Prisma.EnumDealStatusFieldUpdateOperationsInput | $Enums.DealStatus
+  stage?: Prisma.EnumDealStageFieldUpdateOperationsInput | $Enums.DealStage
+  probability?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  businessId?: Prisma.StringFieldUpdateOperationsInput | string
   closedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -837,11 +1018,13 @@ export type DealSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   probability?: boolean
   userId?: boolean
   businessId?: boolean
+  customerId?: boolean
   closedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   business?: boolean | Prisma.BusinessDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.Deal$customerArgs<ExtArgs>
 }, ExtArgs["result"]["deal"]>
 
 export type DealSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -853,11 +1036,13 @@ export type DealSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   probability?: boolean
   userId?: boolean
   businessId?: boolean
+  customerId?: boolean
   closedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   business?: boolean | Prisma.BusinessDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.Deal$customerArgs<ExtArgs>
 }, ExtArgs["result"]["deal"]>
 
 export type DealSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -869,11 +1054,13 @@ export type DealSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   probability?: boolean
   userId?: boolean
   businessId?: boolean
+  customerId?: boolean
   closedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   business?: boolean | Prisma.BusinessDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.Deal$customerArgs<ExtArgs>
 }, ExtArgs["result"]["deal"]>
 
 export type DealSelectScalar = {
@@ -885,23 +1072,27 @@ export type DealSelectScalar = {
   probability?: boolean
   userId?: boolean
   businessId?: boolean
+  customerId?: boolean
   closedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "value" | "status" | "stage" | "probability" | "userId" | "businessId" | "closedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["deal"]>
+export type DealOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyName" | "value" | "status" | "stage" | "probability" | "userId" | "businessId" | "customerId" | "closedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["deal"]>
 export type DealInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   business?: boolean | Prisma.BusinessDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.Deal$customerArgs<ExtArgs>
 }
 export type DealIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   business?: boolean | Prisma.BusinessDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.Deal$customerArgs<ExtArgs>
 }
 export type DealIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   business?: boolean | Prisma.BusinessDefaultArgs<ExtArgs>
+  customer?: boolean | Prisma.Deal$customerArgs<ExtArgs>
 }
 
 export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -909,6 +1100,7 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
     business: Prisma.$BusinessPayload<ExtArgs>
+    customer: Prisma.$CustomerPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -919,6 +1111,7 @@ export type $DealPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     probability: number
     userId: string
     businessId: string
+    customerId: string | null
     closedAt: Date | null
     createdAt: Date
     updatedAt: Date
@@ -1318,6 +1511,7 @@ export interface Prisma__DealClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   business<T extends Prisma.BusinessDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BusinessDefaultArgs<ExtArgs>>): Prisma.Prisma__BusinessClient<runtime.Types.Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  customer<T extends Prisma.Deal$customerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Deal$customerArgs<ExtArgs>>): Prisma.Prisma__CustomerClient<runtime.Types.Result.GetResult<Prisma.$CustomerPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1355,6 +1549,7 @@ export interface DealFieldRefs {
   readonly probability: Prisma.FieldRef<"Deal", 'Int'>
   readonly userId: Prisma.FieldRef<"Deal", 'String'>
   readonly businessId: Prisma.FieldRef<"Deal", 'String'>
+  readonly customerId: Prisma.FieldRef<"Deal", 'String'>
   readonly closedAt: Prisma.FieldRef<"Deal", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Deal", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Deal", 'DateTime'>
@@ -1756,6 +1951,25 @@ export type DealDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Deals to delete.
    */
   limit?: number
+}
+
+/**
+ * Deal.customer
+ */
+export type Deal$customerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Customer
+   */
+  select?: Prisma.CustomerSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Customer
+   */
+  omit?: Prisma.CustomerOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CustomerInclude<ExtArgs> | null
+  where?: Prisma.CustomerWhereInput
 }
 
 /**
