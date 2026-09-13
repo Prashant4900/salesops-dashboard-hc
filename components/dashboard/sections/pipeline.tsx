@@ -10,6 +10,7 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 interface Deal {
   id: string
@@ -154,19 +155,21 @@ function DealCard({ deal, index }: { deal: Deal; index: number }) {
           <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center">
             <Building2 className="w-4 h-4 text-muted-foreground" />
           </div>
-          <span className="text-sm font-medium text-foreground truncate max-w-[120px]">
+          <span className="text-sm font-medium text-foreground truncate max-w-30">
             {deal.company}
           </span>
         </div>
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
           className={cn(
-            "w-6 h-6 flex items-center justify-center rounded text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200",
+            "w-6 h-6 flex items-center justify-center text-muted-foreground hover:text-foreground transition-all duration-200",
             isHovered ? "opacity-100" : "opacity-0",
           )}
         >
           <MoreHorizontal className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
 
       <div className="flex items-center gap-2 text-sm text-foreground font-semibold mb-3">
@@ -216,13 +219,14 @@ export function PipelineSection() {
             Manage and track your sales pipeline
           </p>
         </div>
-        <button
+        <Button
+          variant="default"
           type="button"
-          className="flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors duration-200"
+          className="flex items-center gap-2 bg-accent text-accent-foreground font-medium hover:bg-accent/90"
         >
           <Plus className="w-4 h-4" />
           Add Deal
-        </button>
+        </Button>
       </div>
 
       {/* Pipeline board */}
@@ -230,7 +234,7 @@ export function PipelineSection() {
         {stages.map((stage, stageIndex) => (
           <div
             key={stage.id}
-            className="bg-card border border-border rounded-xl p-4 min-h-[500px] animate-in fade-in slide-in-from-bottom-4 duration-500"
+            className="bg-card border border-border rounded-xl p-4 min-h-125 animate-in fade-in slide-in-from-bottom-4 duration-500"
             style={{
               animationDelay: `${stageIndex * 100}ms`,
               animationFillMode: "both",
@@ -259,13 +263,14 @@ export function PipelineSection() {
             </div>
 
             {/* Add deal to stage */}
-            <button
+            <Button
+              variant="outline"
               type="button"
-              className="w-full mt-3 flex items-center justify-center gap-2 py-2 rounded-lg border border-dashed border-border text-sm text-muted-foreground hover:text-foreground hover:border-accent/50 hover:bg-secondary/50 transition-all duration-200"
+              className="w-full mt-3 flex items-center justify-center gap-2 border-dashed text-muted-foreground hover:text-foreground hover:border-accent/50 hover:bg-secondary/50 transition-all duration-200"
             >
               <Plus className="w-4 h-4" />
               Add deal
-            </button>
+            </Button>
           </div>
         ))}
       </div>

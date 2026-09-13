@@ -25,6 +25,7 @@ import {
   YAxis,
 } from "recharts"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 const conversionData = [
   { month: "Jan", rate: 18 },
@@ -115,13 +116,14 @@ function ReportCard({
       </div>
       <h3 className="text-sm font-semibold text-foreground mb-1">{title}</h3>
       <p className="text-xs text-muted-foreground mb-4">{description}</p>
-      <button
+      <Button
+        variant="link"
         type="button"
-        className="flex items-center gap-1 text-xs text-accent font-medium group-hover:gap-2 transition-all duration-200"
+        className="flex items-center gap-1 h-auto p-0 text-xs text-accent font-medium group-hover:gap-2 transition-all duration-200"
       >
         View Report
         <ChevronRight className="w-3 h-3" />
-      </button>
+      </Button>
     </div>
   )
 }
@@ -187,7 +189,7 @@ export function ReportsSection() {
             </div>
           </div>
           <div
-            className={`h-[250px] transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
+            className={`h-62.5 transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
           >
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -251,7 +253,7 @@ export function ReportsSection() {
           </div>
           <div className="flex items-center gap-8">
             <div
-              className={`w-[180px] h-[180px] transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
+              className={`w-45 h-45 transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
             >
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -311,13 +313,15 @@ export function ReportsSection() {
               Your generated reports
             </p>
           </div>
-          <button
+          <Button
+            variant="secondary"
+            size="sm"
             type="button"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+            className="flex items-center gap-2 px-3 py-1.5 h-8 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
           >
             <FileText className="w-4 h-4" />
             Generate New
-          </button>
+          </Button>
         </div>
         <div className="divide-y divide-border">
           {reports.map((report, index) => (
@@ -353,13 +357,15 @@ export function ReportsSection() {
                     Generating...
                   </div>
                 ) : (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     type="button"
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
+                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
                   >
                     <Download className="w-4 h-4" />
                     Download
-                  </button>
+                  </Button>
                 )}
               </div>
             </div>

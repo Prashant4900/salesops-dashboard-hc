@@ -20,6 +20,7 @@ import {
   YAxis,
 } from "recharts"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 interface TeamMember {
   id: string
@@ -123,7 +124,7 @@ function TeamMemberCard({
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-accent/80 to-chart-1 flex items-center justify-center text-sm font-bold text-accent-foreground">
+            <div className="w-12 h-12 rounded-full bg-linear-to-br from-accent/80 to-chart-1 flex items-center justify-center text-sm font-bold text-accent-foreground">
               {member.avatar}
             </div>
             {member.rank <= 3 && (
@@ -139,12 +140,14 @@ function TeamMemberCard({
             <p className="text-xs text-muted-foreground">{member.role}</p>
           </div>
         </div>
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
-          className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary opacity-0 group-hover:opacity-100 transition-all duration-200"
+          className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100"
         >
           <MoreHorizontal className="w-4 h-4" />
-        </button>
+        </Button>
       </div>
 
       {/* Stats */}
@@ -188,18 +191,22 @@ function TeamMemberCard({
       {/* Change indicator */}
       <div className="flex items-center justify-between pt-4 border-t border-border">
         <div className="flex items-center gap-2">
-          <button
+          <Button
+            variant="secondary"
+            size="icon"
             type="button"
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
+            className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/80"
           >
             <Mail className="w-4 h-4" />
-          </button>
-          <button
+          </Button>
+          <Button
+            variant="secondary"
+            size="icon"
             type="button"
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"
+            className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary/80"
           >
             <Phone className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
         <div
           className={cn(
@@ -296,7 +303,7 @@ export function TeamSection() {
           </div>
         </div>
         <div
-          className={`h-[250px] transition-opacity duration-700 ${chartLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`h-62.5 transition-opacity duration-700 ${chartLoaded ? "opacity-100" : "opacity-0"}`}
         >
           <ResponsiveContainer width="100%" height="100%">
             <BarChart

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { type Section, sectionTitles } from "@/lib/dashboard-config"
 import { useSession, useLogout } from "@/hooks/use-auth"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 interface HeaderProps {
   activeSection: Section
@@ -56,11 +57,13 @@ export function Header({ activeSection }: HeaderProps) {
         </div>
 
         {/* Theme toggle */}
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           onClick={() => setTheme(isDark ? "light" : "dark")}
-          className="relative w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
+          className="text-muted-foreground hover:text-foreground"
         >
           {mounted &&
             (isDark ? (
@@ -68,24 +71,28 @@ export function Header({ activeSection }: HeaderProps) {
             ) : (
               <Moon className="w-5 h-5" />
             ))}
-        </button>
+        </Button>
 
         {/* Notifications */}
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
-          className="relative w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
+          className="relative text-muted-foreground hover:text-foreground"
         >
           <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-accent rounded-full animate-pulse" />
-        </button>
+          <span className="absolute top-2 right-2 w-2 h-2 bg-accent rounded-full animate-pulse" />
+        </Button>
 
         {/* User avatar & Logout */}
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           type="button"
           onClick={() => logout.mutate()}
           title="Click to logout"
           disabled={isPending}
-          className="w-9 h-9 rounded-lg overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 transition-all duration-200"
+          className="rounded-lg overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 hover:bg-secondary p-0"
         >
           {isPending ? (
             <div className="w-full h-full bg-muted animate-pulse" />
@@ -94,7 +101,7 @@ export function Header({ activeSection }: HeaderProps) {
               {initials || "U"}
             </div>
           )}
-        </button>
+        </Button>
       </div>
     </header>
   )

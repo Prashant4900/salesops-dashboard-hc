@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 interface Deal {
   id: string
@@ -174,30 +175,34 @@ export function DealsSection() {
           </div>
           <div className="flex items-center gap-2">
             {["all", "won", "pending", "lost"].map((filter) => (
-              <button
+              <Button
+                variant={selectedFilter === filter ? "default" : "secondary"}
+                size="sm"
                 type="button"
                 key={filter}
                 onClick={() => setSelectedFilter(filter)}
                 className={cn(
-                  "px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
+                  "px-3 py-1.5 h-8 text-xs font-medium transition-all duration-200",
                   selectedFilter === filter
-                    ? "bg-accent text-accent-foreground"
-                    : "bg-secondary text-muted-foreground hover:text-foreground",
+                    ? "bg-accent text-accent-foreground hover:bg-accent/90"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {filter.charAt(0).toUpperCase() + filter.slice(1)}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
-        <button
+        <Button
+          variant="secondary"
+          size="sm"
           type="button"
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+          className="flex items-center gap-2 px-3 py-1.5 h-8 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
         >
           <Filter className="w-4 h-4" />
           More filters
           <ChevronDown className="w-3 h-3" />
-        </button>
+        </Button>
       </div>
 
       {/* Table */}
@@ -207,25 +212,29 @@ export function DealsSection() {
             <thead>
               <tr className="border-b border-border bg-secondary/50">
                 <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     type="button"
-                    className="flex items-center gap-1 hover:text-foreground transition-colors"
+                    className="flex items-center gap-1 hover:text-foreground transition-colors h-auto p-0 hover:bg-transparent"
                   >
                     Company
                     <ArrowUpDown className="w-3 h-3" />
-                  </button>
+                  </Button>
                 </th>
                 <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Contact
                 </th>
                 <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     type="button"
-                    className="flex items-center gap-1 hover:text-foreground transition-colors"
+                    className="flex items-center gap-1 hover:text-foreground transition-colors h-auto p-0 hover:bg-transparent"
                   >
                     Value
                     <ArrowUpDown className="w-3 h-3" />
-                  </button>
+                  </Button>
                 </th>
                 <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Stage
@@ -309,12 +318,14 @@ export function DealsSection() {
                       </span>
                     </td>
                     <td className="py-4 px-4">
-                      <button
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         type="button"
-                        className="w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
+                        className="w-8 h-8 flex items-center justify-center text-muted-foreground hover:text-foreground"
                       >
                         <MoreHorizontal className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </td>
                   </tr>
                 )
@@ -329,30 +340,38 @@ export function DealsSection() {
             Showing {filteredDeals.length} of {deals.length} deals
           </span>
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               type="button"
-              className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200"
+              className="text-muted-foreground hover:text-foreground"
             >
               Previous
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
               type="button"
-              className="px-3 py-1.5 rounded-lg text-sm bg-accent text-accent-foreground font-medium"
+              className="bg-accent text-accent-foreground font-medium hover:bg-accent/90"
             >
               1
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               type="button"
-              className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200"
+              className="text-muted-foreground hover:text-foreground"
             >
               2
-            </button>
-            <button
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
               type="button"
-              className="px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors duration-200"
+              className="text-muted-foreground hover:text-foreground"
             >
               Next
-            </button>
+            </Button>
           </div>
         </div>
       </div>

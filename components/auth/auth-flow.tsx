@@ -65,14 +65,20 @@ function PasswordInput({
         placeholder={placeholder}
         className={`${inputClass} pr-12`}
       />
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         type="button"
         aria-label={visible ? "Hide password" : "Show password"}
         onClick={() => setVisible(!visible)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-transparent"
       >
-        {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-      </button>
+        {visible ? (
+          <EyeOff className="h-4 w-4" />
+        ) : (
+          <Eye className="h-4 w-4" />
+        )}
+      </Button>
     </div>
   )
 }

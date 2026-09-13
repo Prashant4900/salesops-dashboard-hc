@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, CheckCircle2, Clock, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 const deals = [
   {
@@ -74,13 +75,15 @@ export function RecentDeals() {
             Latest activity
           </p>
         </div>
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           type="button"
-          className="flex items-center gap-1 text-sm text-accent hover:text-accent/80 font-medium transition-colors group"
+          className="text-accent hover:text-accent/80 hover:bg-transparent px-2 group"
         >
           View all
-          <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </button>
+          <ArrowUpRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </Button>
       </div>
 
       <div className="space-y-3">

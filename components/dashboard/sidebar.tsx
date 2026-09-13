@@ -7,6 +7,7 @@ import type { Section } from "@/lib/dashboard-config"
 import { navItems } from "@/lib/dashboard-config"
 import { cn } from "@/lib/utils"
 import { useAppStore } from "@/lib/store/use-app-store"
+import { Button } from "@/components/ui/button"
 
 interface SidebarProps {
   activeSection: Section
@@ -28,7 +29,7 @@ export function Sidebar({ activeSection: _ }: SidebarProps) {
       <div className="h-16 flex items-center px-4 border-b border-sidebar-border">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 bg-white">
-            <CircleDollarSign className="w-5 h-5 text-accent-foreground" />
+            <CircleDollarSign className="w-5 h-5 text-black" />
           </div>
           <span
             className={cn(
@@ -86,10 +87,11 @@ export function Sidebar({ activeSection: _ }: SidebarProps) {
 
       {/* Collapse button */}
       <div className="p-3 border-t border-sidebar-border">
-        <button
+        <Button
+          variant="ghost"
           type="button"
           onClick={toggleSidebar}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-all duration-200"
+          className="w-full flex items-center justify-center gap-2 text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
         >
           {collapsed ? (
             <ChevronRight className="w-5 h-5" />
@@ -99,7 +101,7 @@ export function Sidebar({ activeSection: _ }: SidebarProps) {
               <span>Collapse</span>
             </>
           )}
-        </button>
+        </Button>
       </div>
     </aside>
   )
