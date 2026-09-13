@@ -145,7 +145,6 @@ function DealCard({ deal, index }: { deal: Deal; index: number }) {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
-    // biome-ignore lint/a11y/noStaticElementInteractions: drag-and-drop card, hover state only
     <Card
       className="group bg-background p-4 cursor-grab active:cursor-grabbing hover:border-accent/50 transition-all duration-200 animate-in fade-in slide-in-from-bottom-2"
       style={{ animationDelay: `${index * 50}ms`, animationFillMode: "both" }}

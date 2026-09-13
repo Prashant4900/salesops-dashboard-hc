@@ -1,18 +1,6 @@
 "use client"
 
-import {
-  Bell,
-  Check,
-  ExternalLink,
-  Link2,
-  Mail,
-  RefreshCw,
-  Shield,
-  Smartphone,
-  User,
-  Users,
-  Zap,
-} from "lucide-react"
+import { Check, RefreshCw, Shield, User, Users } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -49,7 +37,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   useChangePassword,

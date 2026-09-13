@@ -25,7 +25,7 @@ export async function GET() {
   }
 
   const currentUser = await userRepo.findById(session.userId)
-  if (!currentUser || !currentUser.businessId) {
+  if (!currentUser?.businessId) {
     return NextResponse.json(
       { error: "No business associated" },
       { status: 400 },
@@ -43,7 +43,7 @@ export async function POST(req: Request) {
   }
 
   const currentUser = await userRepo.findById(session.userId)
-  if (!currentUser || !currentUser.businessId) {
+  if (!currentUser?.businessId) {
     return NextResponse.json(
       { error: "No business associated" },
       { status: 400 },
