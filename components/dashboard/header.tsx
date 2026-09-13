@@ -7,6 +7,8 @@ import { type Section, sectionTitles } from "@/lib/dashboard-config"
 import { useSession, useLogout } from "@/hooks/use-auth"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 interface HeaderProps {
   activeSection: Section
@@ -46,13 +48,13 @@ export function Header({ activeSection }: HeaderProps) {
             searchFocused ? "w-64" : "w-48",
           )}
         >
-          <Search className="absolute left-3 w-4 h-4 text-muted-foreground pointer-events-none" />
-          <input
+          <Search className="absolute left-3 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
+          <Input
             type="text"
             placeholder="Search..."
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
-            className="w-full h-9 pl-9 pr-4 rounded-lg bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-accent transition-all duration-200"
+            className="w-full h-9 pl-9 pr-4 bg-secondary border-border focus-visible:ring-ring/20 focus-visible:border-accent transition-all duration-200"
           />
         </div>
 
@@ -92,14 +94,16 @@ export function Header({ activeSection }: HeaderProps) {
           onClick={() => logout.mutate()}
           title="Click to logout"
           disabled={isPending}
-          className="rounded-lg overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 hover:bg-secondary p-0"
+          className="rounded-full overflow-hidden bg-secondary ring-2 ring-transparent hover:ring-accent/50 hover:bg-secondary p-0"
         >
           {isPending ? (
-            <div className="w-full h-full bg-muted animate-pulse" />
+            <div className="w-full h-full bg-muted animate-pulse rounded-full" />
           ) : (
-            <div className="w-full h-full bg-linear-to-br from-accent/80 to-chart-1 flex items-center justify-center text-xs font-semibold text-accent-foreground">
-              {initials || "U"}
-            </div>
+            <Avatar className="w-full h-full">
+              <AvatarFallback className="bg-linear-to-br from-accent/80 to-chart-1 text-accent-foreground font-semibold text-xs">
+                {initials || "U"}
+              </AvatarFallback>
+            </Avatar>
           )}
         </Button>
       </div>

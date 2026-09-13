@@ -21,6 +21,8 @@ import {
 } from "recharts"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface TeamMember {
   id: string
@@ -117,16 +119,18 @@ function TeamMemberCard({
   const isAboveQuota = quotaPercentage >= 100
 
   return (
-    <div
-      className="group bg-card border border-border rounded-xl p-5 hover:border-accent/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
+    <Card
+      className="group p-5 hover:border-accent/50 transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
       style={{ animationDelay: `${index * 100}ms`, animationFillMode: "both" }}
     >
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-12 h-12 rounded-full bg-linear-to-br from-accent/80 to-chart-1 flex items-center justify-center text-sm font-bold text-accent-foreground">
-              {member.avatar}
-            </div>
+            <Avatar className="w-12 h-12">
+              <AvatarFallback className="bg-linear-to-br from-accent/80 to-chart-1 text-accent-foreground text-sm font-bold">
+                {member.avatar}
+              </AvatarFallback>
+            </Avatar>
             {member.rank <= 3 && (
               <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-warning flex items-center justify-center">
                 <Trophy className="w-3 h-3 text-background" />
@@ -223,7 +227,7 @@ function TeamMemberCard({
           {member.change}%
         </div>
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -245,7 +249,7 @@ export function TeamSection() {
     <div className="space-y-6">
       {/* Header stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center">
               <Target className="w-5 h-5 text-accent" />
@@ -255,8 +259,8 @@ export function TeamSection() {
           <p className="text-2xl font-bold text-foreground">
             ${(totalRevenue / 1000000).toFixed(2)}M
           </p>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
+        </Card>
+        <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-100">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-chart-1/10 flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-chart-1" />
@@ -264,8 +268,8 @@ export function TeamSection() {
             <span className="text-sm text-muted-foreground">Total Deals</span>
           </div>
           <p className="text-2xl font-bold text-foreground">{totalDeals}</p>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+        </Card>
+        <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
               <Trophy className="w-5 h-5 text-success" />
@@ -277,11 +281,11 @@ export function TeamSection() {
           <p className="text-2xl font-bold text-foreground">
             {avgQuotaAttainment.toFixed(0)}%
           </p>
-        </div>
+        </Card>
       </div>
 
       {/* Performance chart */}
-      <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">
+      <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h3 className="text-base font-semibold text-foreground">
@@ -353,7 +357,7 @@ export function TeamSection() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </Card>
 
       {/* Team members grid */}
       <div>

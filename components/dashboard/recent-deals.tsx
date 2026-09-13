@@ -3,6 +3,15 @@
 import { ArrowUpRight, CheckCircle2, Clock, XCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 const deals = [
   {
@@ -65,15 +74,13 @@ const statusConfig = {
 
 export function RecentDeals() {
   return (
-    <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
-      <div className="flex items-center justify-between mb-5">
+    <Card className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 mb-3 space-y-0">
         <div>
-          <h3 className="text-base font-semibold text-foreground">
-            Recent Deals
-          </h3>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <CardTitle className="text-base">Recent Deals</CardTitle>
+          <CardDescription className="mt-0.5">
             Latest activity
-          </p>
+          </CardDescription>
         </div>
         <Button
           variant="ghost"
@@ -84,9 +91,9 @@ export function RecentDeals() {
           View all
           <ArrowUpRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </Button>
-      </div>
+      </CardHeader>
 
-      <div className="space-y-3">
+      <CardContent className="space-y-3">
         {deals.map((deal, index) => {
           const status = statusConfig[deal.status as keyof typeof statusConfig]
           const StatusIcon = status.icon
@@ -101,9 +108,11 @@ export function RecentDeals() {
               }}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-sm font-semibold text-muted-foreground group-hover:bg-accent/10 group-hover:text-accent transition-all duration-200">
-                  {deal.company.charAt(0)}
-                </div>
+                <Avatar className="w-10 h-10 rounded-lg">
+                  <AvatarFallback className="bg-secondary text-muted-foreground text-sm font-semibold rounded-lg group-hover:bg-accent/10 group-hover:text-accent transition-all duration-200">
+                    {deal.company.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
                 <div>
                   <p className="text-sm font-medium text-foreground">
                     {deal.company}
@@ -118,21 +127,23 @@ export function RecentDeals() {
                 <span className="text-sm font-semibold text-foreground">
                   {deal.value}
                 </span>
-                <div
-                  className={cn(
-                    "flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium",
-                    status.bg,
-                    status.color,
-                  )}
+                <Badge
+                  variant={
+                    deal.status === "won"
+                      ? "success"
+                      : deal.status === "pending"
+                        ? "warning"
+                        : "destructive"
+                  }
                 >
                   <StatusIcon className="w-3 h-3" />
                   {status.label}
-                </div>
+                </Badge>
               </div>
             </div>
           )
         })}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

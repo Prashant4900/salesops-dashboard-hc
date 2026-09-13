@@ -10,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
+import { Card, CardContent } from "@/components/ui/card"
 
 const data = [
   { month: "Jan", revenue: 186000, target: 180000 },
@@ -35,7 +36,7 @@ export function RevenueChart() {
   }, [])
 
   return (
-    <div className="bg-card border border-border rounded-xl p-5 h-[380px] animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <Card className="p-5 h-95 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-base font-semibold text-foreground">
@@ -58,7 +59,7 @@ export function RevenueChart() {
       </div>
 
       <div
-        className={`h-[280px] transition-opacity duration-700 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+        className={`h-70 transition-opacity duration-700 ${isLoaded ? "opacity-100" : "opacity-0"}`}
       >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
@@ -143,6 +144,6 @@ export function RevenueChart() {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-    </div>
+    </Card>
   )
 }

@@ -1,6 +1,14 @@
 "use client"
 
 import { TrendingUp, Trophy } from "lucide-react"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 const performers = [
   {
@@ -36,22 +44,20 @@ const performers = [
 
 export function TopPerformers() {
   return (
-    <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
-      <div className="flex items-center justify-between mb-5">
+    <Card className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 mb-3">
         <div>
-          <h3 className="text-base font-semibold text-foreground">
-            Top Performers
-          </h3>
-          <p className="text-sm text-muted-foreground mt-0.5">
+          <CardTitle className="text-base">Top Performers</CardTitle>
+          <CardDescription className="mt-0.5">
             This month&apos;s leaders
-          </p>
+          </CardDescription>
         </div>
         <div className="flex items-center gap-1 text-warning">
           <Trophy className="w-5 h-5" />
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="space-y-3">
+      <CardContent className="space-y-3">
         {performers.map((person, index) => (
           <div
             key={person.name}
@@ -63,12 +69,14 @@ export function TopPerformers() {
           >
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-accent/80 to-chart-1 flex items-center justify-center text-sm font-semibold text-accent-foreground">
-                  {person.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </div>
+                <Avatar className="w-10 h-10">
+                  <AvatarFallback className="bg-linear-to-br from-accent/80 to-chart-1 text-accent-foreground text-sm font-semibold">
+                    {person.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </AvatarFallback>
+                </Avatar>
                 {person.rank <= 3 && (
                   <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-warning text-[10px] font-bold flex items-center justify-center text-background">
                     {person.rank}
@@ -96,7 +104,7 @@ export function TopPerformers() {
             </div>
           </div>
         ))}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

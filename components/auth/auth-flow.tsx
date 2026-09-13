@@ -15,6 +15,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   useForgotPassword,
   useLogin,
@@ -133,13 +134,15 @@ export function LoginForm() {
             onChange={setPassword}
           />
         </div>
-        <label className="flex items-center gap-3 text-sm text-muted-foreground">
-          <input
-            type="checkbox"
-            className="h-4 w-4 accent-[oklch(0.7_0.18_145)]"
-          />
-          Remember me
-        </label>
+        <div className="flex items-center space-x-2">
+          <Checkbox id="remember" />
+          <label
+            htmlFor="remember"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground"
+          >
+            Remember me
+          </label>
+        </div>
         <Button
           disabled={login.isPending}
           className="h-12 w-full gap-2 bg-accent text-accent-foreground hover:bg-accent/90"

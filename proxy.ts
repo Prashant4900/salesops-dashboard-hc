@@ -20,7 +20,7 @@ async function isValidSession(token: string | undefined) {
   return payload !== null
 }
 
-export async function middleware(request: NextRequest) {
+async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const authenticated = await isValidSession(
     request.cookies.get(SESSION_COOKIE)?.value,
@@ -45,6 +45,9 @@ export async function middleware(request: NextRequest) {
 
   return NextResponse.next()
 }
+
+export { proxy }
+export default proxy
 
 export const config = {
   matcher: [

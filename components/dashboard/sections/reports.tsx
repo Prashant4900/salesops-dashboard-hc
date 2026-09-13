@@ -26,6 +26,7 @@ import {
 } from "recharts"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 
 const conversionData = [
   { month: "Jan", rate: 18 },
@@ -102,11 +103,12 @@ function ReportCard({
   index: number
 }) {
   return (
-    <div
-      className="group bg-card border border-border rounded-xl p-5 hover:border-accent/50 cursor-pointer transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
+    <Card
+      className="group p-5 hover:border-accent/50 cursor-pointer transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
       style={{ animationDelay: `${index * 100}ms`, animationFillMode: "both" }}
     >
-      <div
+      <CardContent className="p-0">
+        <div
         className={cn(
           "w-10 h-10 rounded-lg flex items-center justify-center mb-4",
           color,
@@ -124,7 +126,8 @@ function ReportCard({
         View Report
         <ChevronRight className="w-3 h-3" />
       </Button>
-    </div>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -173,8 +176,9 @@ export function ReportsSection() {
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Conversion rate trend */}
-        <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
-          <div className="flex items-center justify-between mb-6">
+        <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+          <CardContent className="p-0">
+            <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-base font-semibold text-foreground">
                 Conversion Rate Trend
@@ -239,11 +243,13 @@ export function ReportsSection() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </div>
+          </CardContent>
+        </Card>
 
         {/* Lead sources pie chart */}
-        <div className="bg-card border border-border rounded-xl p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
-          <div className="mb-6">
+        <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
+          <CardContent className="p-0">
+            <div className="mb-6">
             <h3 className="text-base font-semibold text-foreground">
               Lead Sources
             </h3>
@@ -299,12 +305,14 @@ export function ReportsSection() {
               ))}
             </div>
           </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Recent reports table */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
-        <div className="flex items-center justify-between p-5 border-b border-border">
+      <Card className="overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
+        <CardContent className="p-0">
+          <div className="flex items-center justify-between p-5 border-b border-border">
           <div>
             <h3 className="text-base font-semibold text-foreground">
               Recent Reports
@@ -371,7 +379,8 @@ export function ReportsSection() {
             </div>
           ))}
         </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }

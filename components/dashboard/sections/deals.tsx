@@ -13,6 +13,17 @@ import {
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 interface Deal {
   id: string
@@ -164,13 +175,13 @@ export function DealsSection() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
+            <Input
               type="text"
               placeholder="Search deals..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-64 h-9 pl-9 pr-4 rounded-lg bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/20 focus:border-accent transition-all duration-200"
+              className="w-64 h-9 pl-9 pr-4 bg-secondary border-border focus-visible:ring-ring/20 focus-visible:border-accent transition-all duration-200"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -208,10 +219,10 @@ export function DealsSection() {
       {/* Table */}
       <div className="bg-card border border-border rounded-xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-border bg-secondary/50">
-                <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-secondary/50 hover:bg-secondary/50">
+                <TableHead className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -221,11 +232,11 @@ export function DealsSection() {
                     Company
                     <ArrowUpDown className="w-3 h-3" />
                   </Button>
-                </th>
-                <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                </TableHead>
+                <TableHead className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Contact
-                </th>
-                <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                </TableHead>
+                <TableHead className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -235,47 +246,49 @@ export function DealsSection() {
                     Value
                     <ArrowUpDown className="w-3 h-3" />
                   </Button>
-                </th>
-                <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                </TableHead>
+                <TableHead className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Stage
-                </th>
-                <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                </TableHead>
+                <TableHead className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Status
-                </th>
-                <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                </TableHead>
+                <TableHead className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Rep
-                </th>
-                <th className="text-left py-3 px-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                </TableHead>
+                <TableHead className="text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Close Date
-                </th>
-                <th className="w-12"></th>
-              </tr>
-            </thead>
-            <tbody>
+                </TableHead>
+                <TableHead className="w-12"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {filteredDeals.map((deal, index) => {
                 const status = statusConfig[deal.status]
                 const StatusIcon = status.icon
 
                 return (
-                  <tr
+                  <TableRow
                     key={deal.id}
-                    className="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors duration-150 cursor-pointer animate-in fade-in slide-in-from-left-2"
+                    className="hover:bg-secondary/30 transition-colors duration-150 cursor-pointer animate-in fade-in slide-in-from-left-2"
                     style={{
                       animationDelay: `${index * 50}ms`,
                       animationFillMode: "both",
                     }}
                   >
-                    <td className="py-4 px-4">
+                    <TableCell className="py-4 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-md bg-secondary flex items-center justify-center text-xs font-semibold text-muted-foreground">
-                          {deal.company.charAt(0)}
-                        </div>
+                        <Avatar className="w-8 h-8 rounded-md">
+                          <AvatarFallback className="bg-secondary text-muted-foreground text-xs font-semibold rounded-md">
+                            {deal.company.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
                         <span className="text-sm font-medium text-foreground">
                           {deal.company}
                         </span>
                       </div>
-                    </td>
-                    <td className="py-4 px-4">
+                    </TableCell>
+                    <TableCell className="py-4 px-4">
                       <div>
                         <p className="text-sm text-foreground">
                           {deal.contact}
@@ -284,40 +297,42 @@ export function DealsSection() {
                           {deal.email}
                         </p>
                       </div>
-                    </td>
-                    <td className="py-4 px-4">
+                    </TableCell>
+                    <TableCell className="py-4 px-4">
                       <span className="text-sm font-semibold text-foreground">
                         ${deal.value.toLocaleString()}
                       </span>
-                    </td>
-                    <td className="py-4 px-4">
+                    </TableCell>
+                    <TableCell className="py-4 px-4">
                       <span className="px-2 py-1 rounded-md bg-secondary text-xs font-medium text-foreground">
                         {deal.stage}
                       </span>
-                    </td>
-                    <td className="py-4 px-4">
-                      <div
-                        className={cn(
-                          "inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium",
-                          status.bg,
-                          status.color,
-                        )}
+                    </TableCell>
+                    <TableCell className="py-4 px-4">
+                      <Badge
+                        variant={
+                          deal.status === "won"
+                            ? "success"
+                            : deal.status === "pending"
+                              ? "warning"
+                              : "destructive"
+                        }
                       >
                         <StatusIcon className="w-3 h-3" />
                         {status.label}
-                      </div>
-                    </td>
-                    <td className="py-4 px-4">
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="py-4 px-4">
                       <span className="text-sm text-muted-foreground">
                         {deal.rep}
                       </span>
-                    </td>
-                    <td className="py-4 px-4">
+                    </TableCell>
+                    <TableCell className="py-4 px-4">
                       <span className="text-sm text-muted-foreground">
                         {deal.closeDate}
                       </span>
-                    </td>
-                    <td className="py-4 px-4">
+                    </TableCell>
+                    <TableCell className="py-4 px-4">
                       <Button
                         variant="ghost"
                         size="icon"
@@ -326,12 +341,12 @@ export function DealsSection() {
                       >
                         <MoreHorizontal className="w-4 h-4" />
                       </Button>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )
               })}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
 
         {/* Pagination */}

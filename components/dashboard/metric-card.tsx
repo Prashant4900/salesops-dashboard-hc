@@ -3,6 +3,7 @@
 import type { LucideIcon } from "lucide-react"
 import { TrendingDown, TrendingUp } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Card, CardContent } from "@/components/ui/card"
 
 interface MetricCardProps {
   title: string
@@ -22,14 +23,14 @@ export function MetricCard({
   delay = 0,
 }: MetricCardProps) {
   return (
-    <div
-      className="group relative bg-card border border-border rounded-xl p-5 hover:border-accent/50 transition-all duration-300 overflow-hidden animate-in fade-in slide-in-from-bottom-4"
+    <Card
+      className="group relative p-5 hover:border-accent/50 transition-all duration-300 overflow-hidden animate-in fade-in slide-in-from-bottom-4"
       style={{ animationDelay: `${delay * 100}ms`, animationFillMode: "both" }}
     >
       {/* Subtle gradient on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-linear-to-br from-accent/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-      <div className="relative">
+      <CardContent className="relative p-0">
         <div className="flex items-start justify-between mb-3">
           <span className="text-sm text-muted-foreground font-medium">
             {title}
@@ -60,7 +61,7 @@ export function MetricCard({
             <span>{change}</span>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   )
 }

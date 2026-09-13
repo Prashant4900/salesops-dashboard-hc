@@ -11,6 +11,8 @@ import {
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card } from "@/components/ui/card"
 
 interface Deal {
   id: string
@@ -144,8 +146,8 @@ function DealCard({ deal, index }: { deal: Deal; index: number }) {
 
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: drag-and-drop card, hover state only
-    <div
-      className="group bg-background border border-border rounded-lg p-4 cursor-grab active:cursor-grabbing hover:border-accent/50 transition-all duration-200 animate-in fade-in slide-in-from-bottom-2"
+    <Card
+      className="group bg-background p-4 cursor-grab active:cursor-grabbing hover:border-accent/50 transition-all duration-200 animate-in fade-in slide-in-from-bottom-2"
       style={{ animationDelay: `${index * 50}ms`, animationFillMode: "both" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -203,7 +205,7 @@ function DealCard({ deal, index }: { deal: Deal; index: number }) {
           />
         </div>
       </div>
-    </div>
+    </Card>
   )
 }
 
@@ -232,9 +234,9 @@ export function PipelineSection() {
       {/* Pipeline board */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stages.map((stage, stageIndex) => (
-          <div
+          <Card
             key={stage.id}
-            className="bg-card border border-border rounded-xl p-4 min-h-125 animate-in fade-in slide-in-from-bottom-4 duration-500"
+            className="p-4 min-h-125 animate-in fade-in slide-in-from-bottom-4 duration-500"
             style={{
               animationDelay: `${stageIndex * 100}ms`,
               animationFillMode: "both",
@@ -246,9 +248,9 @@ export function PipelineSection() {
                 <h3 className="text-sm font-semibold text-foreground">
                   {stage.name}
                 </h3>
-                <span className="px-2 py-0.5 bg-secondary rounded-md text-xs font-medium text-muted-foreground">
+                <Badge variant="secondary" className="px-2 py-0.5 font-medium text-muted-foreground">
                   {stage.deals.length}
-                </span>
+                </Badge>
               </div>
               <span className="text-xs font-medium text-muted-foreground">
                 ${(stage.total / 1000).toFixed(0)}k
@@ -271,7 +273,7 @@ export function PipelineSection() {
               <Plus className="w-4 h-4" />
               Add deal
             </Button>
-          </div>
+          </Card>
         ))}
       </div>
     </div>
