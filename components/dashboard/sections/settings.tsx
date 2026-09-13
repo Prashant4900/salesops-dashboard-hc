@@ -10,6 +10,7 @@ import {
   Shield,
   Smartphone,
   User,
+  Users,
   Zap,
 } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -23,98 +24,64 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useSession, useUpdateProfile, useChangePassword } from "@/hooks/use-auth"
-
-const integrations = [
-  {
-    id: "salesforce",
-    name: "Salesforce",
-    description: "Sync contacts and opportunities",
-    connected: true,
-    lastSync: "2 hours ago",
-  },
-  {
-    id: "hubspot",
-    name: "HubSpot",
-    description: "Marketing automation and CRM",
-    connected: true,
-    lastSync: "5 mins ago",
-  },
-  {
-    id: "slack",
-    name: "Slack",
-    description: "Team notifications and alerts",
-    connected: true,
-    lastSync: "Real-time",
-  },
-  {
-    id: "gmail",
-    name: "Gmail",
-    description: "Email tracking and sync",
-    connected: false,
-    lastSync: null,
-  },
-  {
-    id: "calendar",
-    name: "Google Calendar",
-    description: "Meeting scheduling",
-    connected: false,
-    lastSync: null,
-  },
-  {
-    id: "zoom",
-    name: "Zoom",
-    description: "Video conferencing integration",
-    connected: true,
-    lastSync: "1 hour ago",
-  },
-]
-
-const notificationSettings = [
-  {
-    id: "deal_updates",
-    label: "Deal Updates",
-    description: "Get notified when deals change status",
-    email: true,
-    push: true,
-  },
-  {
-    id: "team_activity",
-    label: "Team Activity",
-    description: "Updates on team performance and milestones",
-    email: true,
-    push: false,
-  },
-  {
-    id: "pipeline_alerts",
-    label: "Pipeline Alerts",
-    description: "Alerts for pipeline changes and risks",
-    email: true,
-    push: true,
-  },
-  {
-    id: "forecast_updates",
-    label: "Forecast Updates",
-    description: "Weekly forecast summary reports",
-    email: true,
-    push: false,
-  },
-  {
-    id: "customer_health",
-    label: "Customer Health",
-    description: "Alerts when customer health scores drop",
-    email: false,
-    push: true,
-  },
-]
+import {
+  useChangePassword,
+  useSession,
+  useUpdateProfile,
+} from "@/hooks/use-auth"
+import {
+  useAddTeamMember,
+  useRemoveTeamMember,
+  useTeamMembers,
+  useUpdateTeamMember,
+} from "@/hooks/use-team"
 
 export function SettingsSection() {
   const [activeTab, setActiveTab] = useState("profile")
-  const [notifications, setNotifications] = useState(notificationSettings)
+
+  // ── Team state ─────────────────────────────────────────────
+  const { data: members = [], isLoading: isLoadingMembers } = useTeamMembers()
+  const {
+    mutate: addTeamMember,
+    isPending: isAddingMember,
+    error: addTeamMemberError,
+  } = useAddTeamMember()
+  const { mutate: updateTeamMember, isPending: isUpdatingMember } =
+    useUpdateTeamMember()
+  const { mutate: removeTeamMember, isPending: isRemovingMember } =
+    useRemoveTeamMember()
+  const [isAddMemberOpen, setIsAddMemberOpen] = useState(false)
+  const [newMemberName, setNewMemberName] = useState("")
+  const [newMemberEmail, setNewMemberEmail] = useState("")
+  const [newMemberPassword, setNewMemberPassword] = useState("")
+  const [newMemberRole, setNewMemberRole] = useState("STAFF")
 
   // ── Profile state ──────────────────────────────────────────
   const { data: session } = useSession()
@@ -152,7 +119,11 @@ export function SettingsSection() {
   }
 
   const handleChangePassword = () => {
-    if (!currentPassword || newPassword.length < 8 || newPassword !== confirmPassword)
+    if (
+      !currentPassword ||
+      newPassword.length < 8 ||
+      newPassword !== confirmPassword
+    )
       return
     changePassword.mutate(
       { currentPassword, newPassword },
@@ -166,21 +137,36 @@ export function SettingsSection() {
     )
   }
 
-  const toggleNotification = (id: string, type: "email" | "push") => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, [type]: !n[type] } : n)),
+  const handleAddMember = (e: React.FormEvent) => {
+    e.preventDefault()
+    addTeamMember(
+      {
+        name: newMemberName,
+        email: newMemberEmail,
+        password: newMemberPassword,
+        role: newMemberRole,
+      },
+      {
+        onSuccess: () => {
+          setIsAddMemberOpen(false)
+          setNewMemberName("")
+          setNewMemberEmail("")
+          setNewMemberPassword("")
+          setNewMemberRole("STAFF")
+        },
+      },
     )
   }
 
   // Derive initials from current session
   const initials = session?.name
     ? session.name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .substring(0, 2)
-    : session?.email?.substring(0, 2).toUpperCase() ?? "??"
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2)
+    : (session?.email?.substring(0, 2).toUpperCase() ?? "??")
 
   return (
     <div className="space-y-6">
@@ -204,20 +190,14 @@ export function SettingsSection() {
             <User className="w-4 h-4 mr-2" />
             Profile
           </TabsTrigger>
-          {/* <TabsTrigger
-            value="notifications"
-            className="data-[state=active]:bg-card data-[state=active]:text-foreground"
-          >
-            <Bell className="w-4 h-4 mr-2" />
-            Notifications
-          </TabsTrigger>
+
           <TabsTrigger
-            value="integrations"
+            value="members"
             className="data-[state=active]:bg-card data-[state=active]:text-foreground"
           >
-            <Link2 className="w-4 h-4 mr-2" />
-            Integrations
-          </TabsTrigger> */}
+            <Users className="w-4 h-4 mr-2" />
+            Members
+          </TabsTrigger>
           <TabsTrigger
             value="security"
             className="data-[state=active]:bg-card data-[state=active]:text-foreground"
@@ -237,9 +217,7 @@ export function SettingsSection() {
               <CardTitle className="text-base font-medium">
                 Personal Information
               </CardTitle>
-              <CardDescription>
-                Update your personal details
-              </CardDescription>
+              <CardDescription>Update your personal details</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Avatar row */}
@@ -319,165 +297,251 @@ export function SettingsSection() {
           </Card>
         </TabsContent>
 
-        {/* ── Notifications Tab ──────────────────────────────── */}
+        {/* ── Members Tab ────────────────────────────────────── */}
         <TabsContent
-          value="notifications"
+          value="members"
           className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
         >
           <Card className="border-border bg-card">
-            <CardHeader>
-              <CardTitle className="text-base font-medium">
-                Notification Preferences
-              </CardTitle>
-              <CardDescription>
-                Choose how and when you want to be notified
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-1">
-                <div className="grid grid-cols-[1fr,80px,80px] gap-4 pb-3 border-b border-border text-sm text-muted-foreground">
-                  <span>Notification Type</span>
-                  <span className="text-center flex items-center justify-center gap-1.5">
-                    <Mail className="w-4 h-4" />
-                    Email
-                  </span>
-                  <span className="text-center flex items-center justify-center gap-1.5">
-                    <Smartphone className="w-4 h-4" />
-                    Push
-                  </span>
-                </div>
-                {notifications.map((notification, index) => (
-                  <div
-                    key={notification.id}
-                    className="grid grid-cols-[1fr,80px,80px] gap-4 py-4 border-b border-border last:border-0 animate-in fade-in slide-in-from-left-2"
-                    style={{ animationDelay: `${index * 50}ms` }}
-                  >
-                    <div>
-                      <p className="font-medium text-foreground">
-                        {notification.label}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {notification.description}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <Switch
-                        checked={notification.email}
-                        onCheckedChange={() =>
-                          toggleNotification(notification.id, "email")
-                        }
-                      />
-                    </div>
-                    <div className="flex items-center justify-center">
-                      <Switch
-                        checked={notification.push}
-                        onCheckedChange={() =>
-                          toggleNotification(notification.id, "push")
-                        }
-                      />
-                    </div>
-                  </div>
-                ))}
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-base font-medium">
+                  Team Members
+                </CardTitle>
+                <CardDescription>
+                  Manage your team members and their roles.
+                </CardDescription>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              {(session?.role === "OWNER" || session?.role === "ADMIN") && (
+                <Dialog
+                  open={isAddMemberOpen}
+                  onOpenChange={setIsAddMemberOpen}
+                >
+                  <DialogTrigger asChild>
+                    <Button className="bg-accent hover:bg-accent/90 text-accent-foreground">
+                      Add Member
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Add Team Member</DialogTitle>
+                      <DialogDescription>
+                        Invite a new member to your business account.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleAddMember} className="space-y-4 pt-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="memberName">Name</Label>
+                        <Input
+                          id="memberName"
+                          value={newMemberName}
+                          onChange={(e) => setNewMemberName(e.target.value)}
+                          placeholder="John Doe"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="memberEmail">Email</Label>
+                        <Input
+                          id="memberEmail"
+                          type="email"
+                          value={newMemberEmail}
+                          onChange={(e) => setNewMemberEmail(e.target.value)}
+                          placeholder="john@example.com"
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="memberPassword">Password</Label>
+                        <Input
+                          id="memberPassword"
+                          type="password"
+                          value={newMemberPassword}
+                          onChange={(e) => setNewMemberPassword(e.target.value)}
+                          placeholder="At least 8 characters"
+                          required
+                          minLength={8}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="memberRole">Role</Label>
+                        <Select
+                          value={newMemberRole}
+                          onValueChange={setNewMemberRole}
+                        >
+                          <SelectTrigger id="memberRole">
+                            <SelectValue placeholder="Select role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="STAFF">Staff</SelectItem>
+                            {session?.role === "OWNER" && (
+                              <SelectItem value="ADMIN">Admin</SelectItem>
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
 
-        {/* ── Integrations Tab ───────────────────────────────── */}
-        <TabsContent
-          value="integrations"
-          className="space-y-6 animate-in fade-in slide-in-from-bottom-2 duration-300"
-        >
-          <Card className="border-border bg-card">
-            <CardHeader>
-              <CardTitle className="text-base font-medium">
-                Connected Services
-              </CardTitle>
-              <CardDescription>
-                Manage your third-party integrations
-              </CardDescription>
+                      {addTeamMemberError && (
+                        <p className="text-sm text-destructive">
+                          {addTeamMemberError instanceof Error
+                            ? addTeamMemberError.message
+                            : "Failed to add member."}
+                        </p>
+                      )}
+
+                      <div className="flex justify-end pt-4">
+                        <Button
+                          type="submit"
+                          disabled={
+                            isAddingMember ||
+                            !newMemberName ||
+                            !newMemberEmail ||
+                            newMemberPassword.length < 8
+                          }
+                          className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                        >
+                          {isAddingMember ? (
+                            <>
+                              <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                              Adding...
+                            </>
+                          ) : (
+                            "Add Member"
+                          )}
+                        </Button>
+                      </div>
+                    </form>
+                  </DialogContent>
+                </Dialog>
+              )}
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {integrations.map((integration, index) => (
-                  <div
-                    key={integration.id}
-                    className={`p-4 rounded-lg border transition-all duration-300 animate-in fade-in slide-in-from-bottom-2 ${integration.connected
-                        ? "bg-secondary/50 border-border hover:border-accent/50"
-                        : "bg-secondary/20 border-border hover:border-muted-foreground/30"
-                      }`}
-                    style={{ animationDelay: `${index * 75}ms` }}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div
-                          className={`w-10 h-10 rounded-lg flex items-center justify-center ${integration.connected ? "bg-accent/20" : "bg-muted"
-                            }`}
-                        >
-                          <Zap
-                            className={`w-5 h-5 ${integration.connected
-                                ? "text-accent"
-                                : "text-muted-foreground"
-                              }`}
-                          />
+              {isLoadingMembers ? (
+                <div className="flex justify-center p-4">
+                  <RefreshCw className="w-6 h-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {members.map((member) => {
+                    const currentUserRole = session?.role || "STAFF"
+                    const canManage =
+                      currentUserRole === "OWNER" ||
+                      (currentUserRole === "ADMIN" && member.role === "STAFF")
+
+                    return (
+                      <div
+                        key={member.id}
+                        className="flex items-center justify-between p-4 rounded-lg border border-border bg-secondary/20 transition-all hover:bg-secondary/40"
+                      >
+                        <div className="flex items-center gap-4">
+                          <Avatar className="w-10 h-10 bg-secondary">
+                            <AvatarFallback className="bg-accent text-accent-foreground text-sm font-semibold">
+                              {member.name
+                                ? member.name
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")
+                                    .substring(0, 2)
+                                : member.email.substring(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="font-medium text-foreground">
+                              {member.name || "No name"}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              {member.email}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-medium text-foreground">
-                            {integration.name}
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            {integration.description}
-                          </p>
+                        <div className="flex items-center gap-4">
+                          <Badge
+                            variant="outline"
+                            className={
+                              member.role === "OWNER"
+                                ? "border-accent/50 text-accent"
+                                : member.role === "ADMIN"
+                                  ? "border-primary/50 text-primary"
+                                  : "border-muted-foreground/50 text-muted-foreground"
+                            }
+                          >
+                            {member.role}
+                          </Badge>
+                          {canManage ? (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  disabled={
+                                    isUpdatingMember || isRemovingMember
+                                  }
+                                >
+                                  Manage
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {currentUserRole === "OWNER" &&
+                                  member.role === "STAFF" && (
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        updateTeamMember({
+                                          id: member.id,
+                                          role: "ADMIN",
+                                        })
+                                      }
+                                    >
+                                      Promote to Admin
+                                    </DropdownMenuItem>
+                                  )}
+                                {currentUserRole === "OWNER" &&
+                                  member.role === "ADMIN" && (
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        updateTeamMember({
+                                          id: member.id,
+                                          role: "STAFF",
+                                        })
+                                      }
+                                    >
+                                      Demote to Staff
+                                    </DropdownMenuItem>
+                                  )}
+                                <DropdownMenuItem
+                                  className="text-destructive focus:bg-destructive/10 focus:text-destructive"
+                                  onClick={() => {
+                                    if (
+                                      window.confirm(
+                                        `Are you sure you want to remove ${member.name || member.email} from the team?`,
+                                      )
+                                    ) {
+                                      removeTeamMember(member.id)
+                                    }
+                                  }}
+                                >
+                                  Remove Member
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          ) : (
+                            <Button variant="ghost" size="sm" disabled>
+                              View
+                            </Button>
+                          )}
                         </div>
                       </div>
-                      <Badge
-                        className={
-                          integration.connected
-                            ? "bg-accent/20 text-accent border-accent/30"
-                            : "bg-muted text-muted-foreground border-border"
-                        }
-                      >
-                        {integration.connected ? "Connected" : "Not connected"}
-                      </Badge>
-                    </div>
-                    <div className="mt-4 flex items-center justify-between">
-                      {integration.connected ? (
-                        <>
-                          <span className="text-xs text-muted-foreground">
-                            Last sync: {integration.lastSync}
-                          </span>
-                          <div className="flex items-center gap-2">
-                            <Button variant="ghost" size="sm" className="h-8">
-                              <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
-                              Sync
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-8 text-destructive hover:text-destructive"
-                            >
-                              Disconnect
-                            </Button>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <span className="text-xs text-muted-foreground">
-                            Not configured
-                          </span>
-                          <Button
-                            size="sm"
-                            className="h-8 bg-accent hover:bg-accent/90 text-accent-foreground"
-                          >
-                            Connect
-                            <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                    )
+                  })}
+
+                  {members.length === 0 && (
+                    <p className="text-center text-muted-foreground py-4">
+                      No team members found.
+                    </p>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

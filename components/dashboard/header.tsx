@@ -3,12 +3,12 @@
 import { Bell, Calendar, Moon, Search, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
-import { type Section, sectionTitles } from "@/lib/dashboard-config"
-import { useSession, useLogout } from "@/hooks/use-auth"
-import { cn } from "@/lib/utils"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { useLogout, useSession } from "@/hooks/use-auth"
+import { type Section, sectionTitles } from "@/lib/dashboard-config"
+import { cn } from "@/lib/utils"
 
 interface HeaderProps {
   activeSection: Section
@@ -25,7 +25,12 @@ export function Header({ activeSection }: HeaderProps) {
 
   const isDark = resolvedTheme === "dark"
   const initials = user?.name
-    ? user.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2)
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2)
     : user?.email?.substring(0, 2).toUpperCase() || ""
 
   return (

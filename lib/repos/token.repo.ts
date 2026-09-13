@@ -1,5 +1,5 @@
 import { db } from "@/lib/clients/db"
-import { Prisma } from "@/lib/generated/prisma/client"
+import type { Prisma } from "@/lib/generated/prisma/client"
 
 export const tokenRepo = {
   async findByToken(token: string) {
@@ -21,7 +21,11 @@ export const tokenRepo = {
     })
   },
 
-  async executeResetTransaction(userId: string, newPasswordHash: string, token: string) {
+  async executeResetTransaction(
+    userId: string,
+    newPasswordHash: string,
+    token: string,
+  ) {
     return db.$transaction([
       db.user.update({
         where: { id: userId },
@@ -32,5 +36,5 @@ export const tokenRepo = {
         data: { usedAt: new Date() },
       }),
     ])
-  }
+  },
 }

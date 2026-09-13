@@ -3,8 +3,8 @@ import type { Metadata } from "next"
 import { DM_Sans, JetBrains_Mono } from "next/font/google"
 import type React from "react"
 import "./globals.css"
-import { Providers } from "@/lib/store/providers"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Providers } from "@/lib/store/providers"
 
 const _dmSans = DM_Sans({
   subsets: ["latin"],

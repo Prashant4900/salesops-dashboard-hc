@@ -12,7 +12,7 @@ export async function GET() {
   const session = await getSession()
   if (!session)
     return NextResponse.json({ error: "Not authenticated." }, { status: 401 })
-  
+
   const user = await userRepo.findById(session.userId)
   if (!user) {
     await clearSessionCookie()
@@ -25,6 +25,7 @@ export async function GET() {
       name: user.name,
       email: user.email,
       role: user.role,
+      businessId: user.businessId,
     },
   })
 }

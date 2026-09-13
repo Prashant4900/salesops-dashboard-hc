@@ -3,11 +3,11 @@
 import { ChevronLeft, ChevronRight, CircleDollarSign } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { Button } from "@/components/ui/button"
 import type { Section } from "@/lib/dashboard-config"
 import { navItems } from "@/lib/dashboard-config"
-import { cn } from "@/lib/utils"
 import { useAppStore } from "@/lib/store/use-app-store"
-import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 interface SidebarProps {
   activeSection: Section

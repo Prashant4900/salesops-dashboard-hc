@@ -4,18 +4,18 @@ import { randomBytes } from "node:crypto"
 import bcrypt from "bcryptjs"
 import { addHours } from "date-fns"
 import type {
+  ChangePasswordInput,
   ForgotPasswordInput,
   LoginInput,
+  OnboardingInput,
   RegisterInput,
   ResetPasswordInput,
-  OnboardingInput,
   UpdateProfileInput,
-  ChangePasswordInput,
 } from "@/lib/auth/schemas"
 import type { Role } from "@/lib/generated/prisma/enums"
-import { userRepo } from "@/lib/repos/user.repo"
-import { tokenRepo } from "@/lib/repos/token.repo"
 import { businessRepo } from "@/lib/repos/business.repo"
+import { tokenRepo } from "@/lib/repos/token.repo"
+import { userRepo } from "@/lib/repos/user.repo"
 
 export class AuthError extends Error {}
 
@@ -98,7 +98,11 @@ export async function resetPassword(input: ResetPasswordInput) {
     throw new AuthError("This reset link is invalid or has expired.")
 
   const passwordHash = await bcrypt.hash(input.password, HASH_ROUNDS)
-  await tokenRepo.executeResetTransaction(record.userId, passwordHash, input.token)
+  await tokenRepo.executeResetTransaction(
+    record.userId,
+    passwordHash,
+    input.token,
+  )
   return { ok: true }
 }
 

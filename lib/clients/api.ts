@@ -5,13 +5,13 @@
  */
 
 import type {
-  LoginInput,
-  RegisterInput,
-  ForgotPasswordInput,
-  ResetPasswordInput,
-  OnboardingInput,
-  UpdateProfileInput,
   ChangePasswordInput,
+  ForgotPasswordInput,
+  LoginInput,
+  OnboardingInput,
+  RegisterInput,
+  ResetPasswordInput,
+  UpdateProfileInput,
 } from "@/lib/auth/schemas"
 
 export type AuthUser = {
@@ -19,6 +19,7 @@ export type AuthUser = {
   name: string | null
   email: string
   role: string
+  businessId: string | null
 }
 
 // ── HTTP helpers ───────────────────────────────────────────────────────────
@@ -74,4 +75,35 @@ export const userApi = {
 
   changePassword: (input: ChangePasswordInput): Promise<{ ok: boolean }> =>
     patch("/api/user/password", input),
+}
+
+// ── Team endpoints ─────────────────────────────────────────────────────────
+
+export type TeamMember = {
+  id: string
+  name: string | null
+  email: string
+  role: string
+  createdAt?: string
+}
+
+export type AddTeamMemberInput = {
+  name: string
+  email: string
+  password?: string
+  role: string
+}
+
+export const teamApi = {
+  getMembers: (): Promise<{ members: TeamMember[] }> =>
+    request("/api/team", "GET"),
+
+  addMember: (input: AddTeamMemberInput): Promise<{ member: TeamMember }> =>
+    post("/api/team", input),
+
+  updateMember: (id: string, role: string): Promise<{ member: TeamMember }> =>
+    patch(`/api/team/${id}`, { role }),
+
+  removeMember: (id: string): Promise<{ ok: boolean }> =>
+    request(`/api/team/${id}`, "DELETE"),
 }

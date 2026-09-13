@@ -1,5 +1,5 @@
 import { db } from "@/lib/clients/db"
-import { Prisma } from "@/lib/generated/prisma/client"
+import type { Prisma } from "@/lib/generated/prisma/client"
 
 export const businessRepo = {
   async create(data: Prisma.BusinessCreateInput) {
@@ -31,5 +31,5 @@ export const businessRepo = {
       })
       return { user, business }
     })
-  }
+  },
 }

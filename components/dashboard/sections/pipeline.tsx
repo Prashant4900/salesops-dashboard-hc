@@ -9,10 +9,10 @@ import {
   User,
 } from "lucide-react"
 import { useState } from "react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 interface Deal {
   id: string
@@ -248,7 +248,10 @@ export function PipelineSection() {
                 <h3 className="text-sm font-semibold text-foreground">
                   {stage.name}
                 </h3>
-                <Badge variant="secondary" className="px-2 py-0.5 font-medium text-muted-foreground">
+                <Badge
+                  variant="secondary"
+                  className="px-2 py-0.5 font-medium text-muted-foreground"
+                >
                   {stage.deals.length}
                 </Badge>
               </div>

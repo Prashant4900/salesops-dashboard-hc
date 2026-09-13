@@ -1,5 +1,5 @@
 import { db } from "@/lib/clients/db"
-import { Prisma } from "@/lib/generated/prisma/client"
+import type { Prisma } from "@/lib/generated/prisma/client"
 
 export const userRepo = {
   async findByEmail(email: string) {
@@ -27,6 +27,12 @@ export const userRepo = {
     })
   },
 
+  async delete(id: string) {
+    return db.user.delete({
+      where: { id },
+    })
+  },
+
   async hasOwner() {
     // Keep the UI preview usable when the optional database integration is not configured.
     if (!process.env.DATABASE_URL) return true
@@ -37,5 +43,18 @@ export const userRepo = {
     })
     return !!owner
   },
-}
 
+  async findByBusinessId(businessId: string) {
+    return db.user.findMany({
+      where: { businessId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "asc" },
+    })
+  },
+}

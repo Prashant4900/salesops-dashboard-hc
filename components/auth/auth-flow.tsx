@@ -13,15 +13,15 @@ import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   useForgotPassword,
   useLogin,
+  useOnboarding,
   useRegister,
   useResetPassword,
-  useOnboarding,
 } from "@/hooks/use-auth"
 
 const inputClass =
@@ -74,11 +74,7 @@ function PasswordInput({
         onClick={() => setVisible(!visible)}
         className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-transparent"
       >
-        {visible ? (
-          <EyeOff className="h-4 w-4" />
-        ) : (
-          <Eye className="h-4 w-4" />
-        )}
+        {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
       </Button>
     </div>
   )
@@ -442,8 +438,9 @@ export function ResetPasswordForm() {
 export function OnboardingForm() {
   const [step, setStep] = useState(1)
   const onboarding = useOnboarding()
-  const error = onboarding.error instanceof Error ? onboarding.error.message : ""
-  
+  const error =
+    onboarding.error instanceof Error ? onboarding.error.message : ""
+
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -584,12 +581,21 @@ export function OnboardingForm() {
               Back
             </Button>
             <Button
-              disabled={!values.company || !values.industry || !values.size || onboarding.isPending}
+              disabled={
+                !values.company ||
+                !values.industry ||
+                !values.size ||
+                onboarding.isPending
+              }
               onClick={() => onboarding.mutate(values)}
               className="h-12 flex-2 gap-2 bg-accent text-accent-foreground hover:bg-accent/90"
             >
-              {onboarding.isPending ? "Creating workspace..." : (
-                <>Create workspace <Check className="h-4 w-4" /></>
+              {onboarding.isPending ? (
+                "Creating workspace..."
+              ) : (
+                <>
+                  Create workspace <Check className="h-4 w-4" />
+                </>
               )}
             </Button>
           </div>

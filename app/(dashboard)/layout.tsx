@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
+import { redirect } from "next/navigation"
 import { DashboardShell } from "@/components/dashboard/shell"
 import { userRepo } from "@/lib/repos/user.repo"
-import { redirect } from "next/navigation"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = {

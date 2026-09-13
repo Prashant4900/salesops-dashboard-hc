@@ -20,8 +20,9 @@ export function DashboardShell({ children }: DashboardShellProps) {
     <div className="flex min-h-screen bg-background">
       <Sidebar activeSection={activeSection} />
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ease-out ${!isSidebarOpen ? "ml-18" : "ml-65"
-          }`}
+        className={`flex-1 flex flex-col transition-all duration-300 ease-out ${
+          !isSidebarOpen ? "ml-18" : "ml-65"
+        }`}
       >
         <Header activeSection={activeSection} />
         <main className="flex-1 p-6 overflow-auto">

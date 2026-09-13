@@ -24,9 +24,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 const conversionData = [
   { month: "Jan", rate: 18 },
@@ -109,23 +109,23 @@ function ReportCard({
     >
       <CardContent className="p-0">
         <div
-        className={cn(
-          "w-10 h-10 rounded-lg flex items-center justify-center mb-4",
-          color,
-        )}
-      >
-        <Icon className="w-5 h-5" />
-      </div>
-      <h3 className="text-sm font-semibold text-foreground mb-1">{title}</h3>
-      <p className="text-xs text-muted-foreground mb-4">{description}</p>
-      <Button
-        variant="link"
-        type="button"
-        className="flex items-center gap-1 h-auto p-0 text-xs text-accent font-medium group-hover:gap-2 transition-all duration-200"
-      >
-        View Report
-        <ChevronRight className="w-3 h-3" />
-      </Button>
+          className={cn(
+            "w-10 h-10 rounded-lg flex items-center justify-center mb-4",
+            color,
+          )}
+        >
+          <Icon className="w-5 h-5" />
+        </div>
+        <h3 className="text-sm font-semibold text-foreground mb-1">{title}</h3>
+        <p className="text-xs text-muted-foreground mb-4">{description}</p>
+        <Button
+          variant="link"
+          type="button"
+          className="flex items-center gap-1 h-auto p-0 text-xs text-accent font-medium group-hover:gap-2 transition-all duration-200"
+        >
+          View Report
+          <ChevronRight className="w-3 h-3" />
+        </Button>
       </CardContent>
     </Card>
   )
@@ -179,70 +179,70 @@ export function ReportsSection() {
         <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
           <CardContent className="p-0">
             <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-base font-semibold text-foreground">
-                Conversion Rate Trend
-              </h3>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                Monthly lead to deal conversion
-              </p>
+              <div>
+                <h3 className="text-base font-semibold text-foreground">
+                  Conversion Rate Trend
+                </h3>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  Monthly lead to deal conversion
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-success font-medium">
+                <TrendingUp className="w-4 h-4" />
+                +111% YoY
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-success font-medium">
-              <TrendingUp className="w-4 h-4" />
-              +111% YoY
+            <div
+              className={`h-62.5 transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={conversionData}
+                  margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="oklch(0.22 0.005 260)"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="month"
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
+                    dy={10}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
+                    tickFormatter={(value) => `${value}%`}
+                    dx={-10}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "oklch(0.12 0.005 260)",
+                      border: "1px solid oklch(0.22 0.005 260)",
+                      borderRadius: "8px",
+                      fontSize: "12px",
+                    }}
+                    labelStyle={{ color: "oklch(0.95 0 0)", fontWeight: 600 }}
+                    formatter={(value: number) => [
+                      `${value}%`,
+                      "Conversion Rate",
+                    ]}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="rate"
+                    stroke="oklch(0.7 0.18 145)"
+                    strokeWidth={2}
+                    dot={false}
+                    activeDot={{ r: 4, strokeWidth: 2 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-          </div>
-          <div
-            className={`h-62.5 transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart
-                data={conversionData}
-                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke="oklch(0.22 0.005 260)"
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="month"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
-                  dy={10}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
-                  tickFormatter={(value) => `${value}%`}
-                  dx={-10}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "oklch(0.12 0.005 260)",
-                    border: "1px solid oklch(0.22 0.005 260)",
-                    borderRadius: "8px",
-                    fontSize: "12px",
-                  }}
-                  labelStyle={{ color: "oklch(0.95 0 0)", fontWeight: 600 }}
-                  formatter={(value: number) => [
-                    `${value}%`,
-                    "Conversion Rate",
-                  ]}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="rate"
-                  stroke="oklch(0.7 0.18 145)"
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{ r: 4, strokeWidth: 2 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
           </CardContent>
         </Card>
 
@@ -250,61 +250,61 @@ export function ReportsSection() {
         <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
           <CardContent className="p-0">
             <div className="mb-6">
-            <h3 className="text-base font-semibold text-foreground">
-              Lead Sources
-            </h3>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Where your leads come from
-            </p>
-          </div>
-          <div className="flex items-center gap-8">
-            <div
-              className={`w-45 h-45 transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={sourceData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={80}
-                    paddingAngle={2}
-                    dataKey="value"
-                  >
-                    {sourceData.map((entry) => (
-                      <Cell key={entry.name} fill={entry.color} />
-                    ))}
-                  </Pie>
-                </PieChart>
-              </ResponsiveContainer>
+              <h3 className="text-base font-semibold text-foreground">
+                Lead Sources
+              </h3>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Where your leads come from
+              </p>
             </div>
-            <div className="flex-1 space-y-3">
-              {sourceData.map((source, index) => (
-                <div
-                  key={source.name}
-                  className="flex items-center justify-between animate-in fade-in slide-in-from-right-2"
-                  style={{
-                    animationDelay: `${(index + 5) * 100}ms`,
-                    animationFillMode: "both",
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <div
-                      className="w-3 h-3 rounded-full"
-                      style={{ backgroundColor: source.color }}
-                    />
-                    <span className="text-sm text-foreground">
-                      {source.name}
+            <div className="flex items-center gap-8">
+              <div
+                className={`w-45 h-45 transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={sourceData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={2}
+                      dataKey="value"
+                    >
+                      {sourceData.map((entry) => (
+                        <Cell key={entry.name} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="flex-1 space-y-3">
+                {sourceData.map((source, index) => (
+                  <div
+                    key={source.name}
+                    className="flex items-center justify-between animate-in fade-in slide-in-from-right-2"
+                    style={{
+                      animationDelay: `${(index + 5) * 100}ms`,
+                      animationFillMode: "both",
+                    }}
+                  >
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: source.color }}
+                      />
+                      <span className="text-sm text-foreground">
+                        {source.name}
+                      </span>
+                    </div>
+                    <span className="text-sm font-semibold text-foreground">
+                      {source.value}%
                     </span>
                   </div>
-                  <span className="text-sm font-semibold text-foreground">
-                    {source.value}%
-                  </span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
           </CardContent>
         </Card>
       </div>
@@ -313,72 +313,72 @@ export function ReportsSection() {
       <Card className="overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
         <CardContent className="p-0">
           <div className="flex items-center justify-between p-5 border-b border-border">
-          <div>
-            <h3 className="text-base font-semibold text-foreground">
-              Recent Reports
-            </h3>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Your generated reports
-            </p>
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            type="button"
-            className="flex items-center gap-2 px-3 py-1.5 h-8 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-          >
-            <FileText className="w-4 h-4" />
-            Generate New
-          </Button>
-        </div>
-        <div className="divide-y divide-border">
-          {reports.map((report, index) => (
-            <div
-              key={report.id}
-              className="flex items-center justify-between px-5 py-4 hover:bg-secondary/30 transition-colors duration-150 cursor-pointer animate-in fade-in slide-in-from-left-2"
-              style={{
-                animationDelay: `${(index + 6) * 50}ms`,
-                animationFillMode: "both",
-              }}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
-                  <FileText className="w-5 h-5 text-muted-foreground" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-foreground">
-                    {report.name}
-                  </p>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="px-1.5 py-0.5 rounded bg-secondary">
-                      {report.type}
-                    </span>
-                    <span>•</span>
-                    <span>{report.date}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                {report.status === "generating" ? (
-                  <div className="flex items-center gap-2 text-xs text-warning">
-                    <Clock className="w-4 h-4 animate-pulse" />
-                    Generating...
-                  </div>
-                ) : (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    type="button"
-                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download
-                  </Button>
-                )}
-              </div>
+            <div>
+              <h3 className="text-base font-semibold text-foreground">
+                Recent Reports
+              </h3>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                Your generated reports
+              </p>
             </div>
-          ))}
-        </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              type="button"
+              className="flex items-center gap-2 px-3 py-1.5 h-8 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+            >
+              <FileText className="w-4 h-4" />
+              Generate New
+            </Button>
+          </div>
+          <div className="divide-y divide-border">
+            {reports.map((report, index) => (
+              <div
+                key={report.id}
+                className="flex items-center justify-between px-5 py-4 hover:bg-secondary/30 transition-colors duration-150 cursor-pointer animate-in fade-in slide-in-from-left-2"
+                style={{
+                  animationDelay: `${(index + 6) * 50}ms`,
+                  animationFillMode: "both",
+                }}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
+                    <FileText className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">
+                      {report.name}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <span className="px-1.5 py-0.5 rounded bg-secondary">
+                        {report.type}
+                      </span>
+                      <span>•</span>
+                      <span>{report.date}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  {report.status === "generating" ? (
+                    <div className="flex items-center gap-2 text-xs text-warning">
+                      <Clock className="w-4 h-4 animate-pulse" />
+                      Generating...
+                    </div>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      type="button"
+                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
+                    >
+                      <Download className="w-4 h-4" />
+                      Download
+                    </Button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
     </div>

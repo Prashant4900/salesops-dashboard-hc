@@ -12,12 +12,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
             staleTime: 60 * 1000, // 1 minute
           },
         },
-      })
+      }),
   )
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )
 }

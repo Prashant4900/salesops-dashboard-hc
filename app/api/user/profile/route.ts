@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
-import { getSession } from "@/lib/auth/session"
 import { updateProfileSchema } from "@/lib/auth/schemas"
+import { getSession } from "@/lib/auth/session"
 import { AuthError, updateProfile } from "@/lib/services/auth.service"
 
 export async function PATCH(req: Request) {

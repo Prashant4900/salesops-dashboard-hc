@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
 
 import { onboardingSchema } from "@/lib/auth/schemas"
-import { AuthError, onboardOwner } from "@/lib/services/auth.service"
 import { setSessionCookie } from "@/lib/auth/session"
+import { AuthError, onboardOwner } from "@/lib/services/auth.service"
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null)

@@ -1,18 +1,18 @@
-import { useEffect } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 
 import type {
+  ChangePasswordInput,
   ForgotPasswordInput,
   LoginInput,
+  OnboardingInput,
   RegisterInput,
   ResetPasswordInput,
-  OnboardingInput,
   UpdateProfileInput,
-  ChangePasswordInput,
 } from "@/lib/auth/schemas"
-import { authApi, userApi } from "@/lib/clients/api"
 import type { AuthUser } from "@/lib/clients/api"
+import { authApi, userApi } from "@/lib/clients/api"
 import { userCache } from "@/lib/store/user-cache"
 
 export type { AuthUser }
@@ -26,7 +26,10 @@ export function useSession() {
   // Using useEffect ensures server and client render identically on first paint,
   // avoiding hydration mismatches. The background API fetch still validates.
   useEffect(() => {
-    const existing = queryClient.getQueryData<AuthUser | null>(["auth", "session"])
+    const existing = queryClient.getQueryData<AuthUser | null>([
+      "auth",
+      "session",
+    ])
     if (existing === undefined) {
       const cached = userCache.get()
       if (cached) {

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
 
 import { registerSchema } from "@/lib/auth/schemas"
-import { AuthError, registerUser } from "@/lib/services/auth.service"
 import { setSessionCookie } from "@/lib/auth/session"
+import { AuthError, registerUser } from "@/lib/services/auth.service"
 
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null)

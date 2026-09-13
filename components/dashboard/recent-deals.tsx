@@ -1,10 +1,9 @@
 "use client"
 
 import { ArrowUpRight, CheckCircle2, Clock, XCircle } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -12,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 
 const deals = [
   {
@@ -78,9 +78,7 @@ export function RecentDeals() {
       <CardHeader className="flex flex-row items-center justify-between pb-2 mb-3 space-y-0">
         <div>
           <CardTitle className="text-base">Recent Deals</CardTitle>
-          <CardDescription className="mt-0.5">
-            Latest activity
-          </CardDescription>
+          <CardDescription className="mt-0.5">Latest activity</CardDescription>
         </div>
         <Button
           variant="ghost"
