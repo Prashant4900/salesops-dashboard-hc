@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import { DashboardShell } from "@/components/dashboard/shell"
 import { userRepo } from "@/lib/repos/user.repo"
 import { redirect } from "next/navigation"
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   title: {
     default: "SalesOps Dashboard",
