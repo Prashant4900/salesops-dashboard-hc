@@ -277,9 +277,9 @@ export function SettingsSection() {
                     id="profile-email"
                     type="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    readOnly
                     placeholder="you@company.com"
-                    className="bg-secondary border-border focus:border-accent"
+                    className="bg-secondary/50 border-border text-muted-foreground cursor-not-allowed"
                   />
                 </div>
               </div>
