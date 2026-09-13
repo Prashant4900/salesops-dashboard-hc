@@ -43,3 +43,13 @@ export function useRemoveTeamMember() {
     },
   })
 }
+
+export function useTeamPerformance() {
+  return useQuery({
+    queryKey: ["team", "performance"],
+    queryFn: async () => {
+      const data = await teamApi.getPerformance()
+      return data.performance
+    },
+  })
+}

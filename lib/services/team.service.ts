@@ -3,6 +3,7 @@ import "server-only"
 import bcrypt from "bcryptjs"
 import type { AddTeamMemberInput, AuthUser } from "@/lib/clients/api"
 import type { Role } from "@/lib/generated/prisma/enums"
+import { dealRepo } from "@/lib/repos/deal.repo"
 import { userRepo } from "@/lib/repos/user.repo"
 
 export class TeamError extends Error {}
@@ -11,6 +12,56 @@ const HASH_ROUNDS = 12
 
 export async function getTeamMembers(businessId: string) {
   return userRepo.findByBusinessId(businessId)
+}
+
+export async function getTeamPerformance(businessId: string) {
+  const users = await userRepo.findByBusinessId(businessId)
+  const deals = await dealRepo.findByBusinessId(businessId)
+
+  const statsMap = new Map<string, { revenue: number; deals: number }>()
+  for (const user of users) {
+    statsMap.set(user.id, { revenue: 0, deals: 0 })
+  }
+
+  for (const deal of deals) {
+    if (deal.status === "WON") {
+      const stats = statsMap.get(deal.userId)
+      if (stats) {
+        stats.revenue += deal.value
+        stats.deals += 1
+      }
+    }
+  }
+
+  const performance = users.map((user) => {
+    const stats = statsMap.get(user.id) ?? { revenue: 0, deals: 0 }
+    return {
+      id: user.id,
+      name: user.name || "No name",
+      role: user.role,
+      email: user.email,
+      avatar: user.name
+        ? user.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .substring(0, 2)
+            .toUpperCase()
+        : user.email.substring(0, 2).toUpperCase(),
+      deals: stats.deals,
+      revenue: stats.revenue,
+      quota: user.quota || 0,
+      change: user.performanceChange || 0,
+    }
+  })
+
+  // Sort by revenue descending for rank
+  performance.sort((a, b) => b.revenue - a.revenue)
+
+  return performance.map((p, index) => ({
+    ...p,
+    rank: index + 1,
+  }))
 }
 
 export async function addTeamMember(

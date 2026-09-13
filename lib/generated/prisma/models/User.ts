@@ -20,8 +20,20 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  quota: number | null
+  performanceChange: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  quota: number | null
+  performanceChange: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -33,6 +45,8 @@ export type UserMinAggregateOutputType = {
   businessId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  quota: number | null
+  performanceChange: number | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -44,6 +58,8 @@ export type UserMaxAggregateOutputType = {
   businessId: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  quota: number | null
+  performanceChange: number | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -55,9 +71,21 @@ export type UserCountAggregateOutputType = {
   businessId: number
   createdAt: number
   updatedAt: number
+  quota: number
+  performanceChange: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  quota?: true
+  performanceChange?: true
+}
+
+export type UserSumAggregateInputType = {
+  quota?: true
+  performanceChange?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -68,6 +96,8 @@ export type UserMinAggregateInputType = {
   businessId?: true
   createdAt?: true
   updatedAt?: true
+  quota?: true
+  performanceChange?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -79,6 +109,8 @@ export type UserMaxAggregateInputType = {
   businessId?: true
   createdAt?: true
   updatedAt?: true
+  quota?: true
+  performanceChange?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -90,6 +122,8 @@ export type UserCountAggregateInputType = {
   businessId?: true
   createdAt?: true
   updatedAt?: true
+  quota?: true
+  performanceChange?: true
   _all?: true
 }
 
@@ -131,6 +165,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -161,6 +207,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -174,7 +222,11 @@ export type UserGroupByOutputType = {
   businessId: string | null
   createdAt: Date
   updatedAt: Date
+  quota: number
+  performanceChange: number
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -206,8 +258,11 @@ export type UserWhereInput = {
   businessId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  quota?: Prisma.FloatFilter<"User"> | number
+  performanceChange?: Prisma.FloatFilter<"User"> | number
   business?: Prisma.XOR<Prisma.BusinessNullableScalarRelationFilter, Prisma.BusinessWhereInput> | null
   resetTokens?: Prisma.PasswordResetTokenListRelationFilter
+  deals?: Prisma.DealListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -219,8 +274,11 @@ export type UserOrderByWithRelationInput = {
   businessId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
+  performanceChange?: Prisma.SortOrder
   business?: Prisma.BusinessOrderByWithRelationInput
   resetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
+  deals?: Prisma.DealOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -235,8 +293,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   businessId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  quota?: Prisma.FloatFilter<"User"> | number
+  performanceChange?: Prisma.FloatFilter<"User"> | number
   business?: Prisma.XOR<Prisma.BusinessNullableScalarRelationFilter, Prisma.BusinessWhereInput> | null
   resetTokens?: Prisma.PasswordResetTokenListRelationFilter
+  deals?: Prisma.DealListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -248,9 +309,13 @@ export type UserOrderByWithAggregationInput = {
   businessId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
+  performanceChange?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -265,6 +330,8 @@ export type UserScalarWhereWithAggregatesInput = {
   businessId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  quota?: Prisma.FloatWithAggregatesFilter<"User"> | number
+  performanceChange?: Prisma.FloatWithAggregatesFilter<"User"> | number
 }
 
 export type UserCreateInput = {
@@ -275,8 +342,11 @@ export type UserCreateInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
   business?: Prisma.BusinessCreateNestedOneWithoutMembersInput
   resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  deals?: Prisma.DealCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -288,7 +358,10 @@ export type UserUncheckedCreateInput = {
   businessId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
   resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  deals?: Prisma.DealUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -299,8 +372,11 @@ export type UserUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
   business?: Prisma.BusinessUpdateOneWithoutMembersNestedInput
   resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  deals?: Prisma.DealUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -312,7 +388,10 @@ export type UserUncheckedUpdateInput = {
   businessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
   resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  deals?: Prisma.DealUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -324,6 +403,8 @@ export type UserCreateManyInput = {
   businessId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
 }
 
 export type UserUpdateManyMutationInput = {
@@ -334,6 +415,8 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -345,6 +428,8 @@ export type UserUncheckedUpdateManyInput = {
   businessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -356,6 +441,13 @@ export type UserCountOrderByAggregateInput = {
   businessId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
+  performanceChange?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  quota?: Prisma.SortOrder
+  performanceChange?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -367,6 +459,8 @@ export type UserMaxOrderByAggregateInput = {
   businessId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
+  performanceChange?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -378,6 +472,13 @@ export type UserMinOrderByAggregateInput = {
   businessId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  quota?: Prisma.SortOrder
+  performanceChange?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  quota?: Prisma.SortOrder
+  performanceChange?: Prisma.SortOrder
 }
 
 export type UserListRelationFilter = {
@@ -409,6 +510,14 @@ export type EnumRoleFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type UserCreateNestedManyWithoutBusinessInput = {
@@ -467,6 +576,20 @@ export type UserUpdateOneRequiredWithoutResetTokensNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutResetTokensInput, Prisma.UserUpdateWithoutResetTokensInput>, Prisma.UserUncheckedUpdateWithoutResetTokensInput>
 }
 
+export type UserCreateNestedOneWithoutDealsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDealsInput, Prisma.UserUncheckedCreateWithoutDealsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDealsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDealsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDealsInput, Prisma.UserUncheckedCreateWithoutDealsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDealsInput
+  upsert?: Prisma.UserUpsertWithoutDealsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDealsInput, Prisma.UserUpdateWithoutDealsInput>, Prisma.UserUncheckedUpdateWithoutDealsInput>
+}
+
 export type UserCreateWithoutBusinessInput = {
   id?: string
   email: string
@@ -475,7 +598,10 @@ export type UserCreateWithoutBusinessInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
   resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  deals?: Prisma.DealCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBusinessInput = {
@@ -486,7 +612,10 @@ export type UserUncheckedCreateWithoutBusinessInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
   resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  deals?: Prisma.DealUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBusinessInput = {
@@ -527,6 +656,8 @@ export type UserScalarWhereInput = {
   businessId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  quota?: Prisma.FloatFilter<"User"> | number
+  performanceChange?: Prisma.FloatFilter<"User"> | number
 }
 
 export type UserCreateWithoutResetTokensInput = {
@@ -537,7 +668,10 @@ export type UserCreateWithoutResetTokensInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
   business?: Prisma.BusinessCreateNestedOneWithoutMembersInput
+  deals?: Prisma.DealCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutResetTokensInput = {
@@ -549,6 +683,9 @@ export type UserUncheckedCreateWithoutResetTokensInput = {
   businessId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
+  deals?: Prisma.DealUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutResetTokensInput = {
@@ -575,7 +712,10 @@ export type UserUpdateWithoutResetTokensInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
   business?: Prisma.BusinessUpdateOneWithoutMembersNestedInput
+  deals?: Prisma.DealUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutResetTokensInput = {
@@ -587,6 +727,81 @@ export type UserUncheckedUpdateWithoutResetTokensInput = {
   businessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
+  deals?: Prisma.DealUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDealsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password: string
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
+  business?: Prisma.BusinessCreateNestedOneWithoutMembersInput
+  resetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDealsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  password: string
+  role?: $Enums.Role
+  businessId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
+  resetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDealsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDealsInput, Prisma.UserUncheckedCreateWithoutDealsInput>
+}
+
+export type UserUpsertWithoutDealsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDealsInput, Prisma.UserUncheckedUpdateWithoutDealsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDealsInput, Prisma.UserUncheckedCreateWithoutDealsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDealsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDealsInput, Prisma.UserUncheckedUpdateWithoutDealsInput>
+}
+
+export type UserUpdateWithoutDealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
+  business?: Prisma.BusinessUpdateOneWithoutMembersNestedInput
+  resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDealsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  businessId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
+  resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyBusinessInput = {
@@ -597,6 +812,8 @@ export type UserCreateManyBusinessInput = {
   role?: $Enums.Role
   createdAt?: Date | string
   updatedAt?: Date | string
+  quota?: number
+  performanceChange?: number
 }
 
 export type UserUpdateWithoutBusinessInput = {
@@ -607,7 +824,10 @@ export type UserUpdateWithoutBusinessInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
   resetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  deals?: Prisma.DealUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBusinessInput = {
@@ -618,7 +838,10 @@ export type UserUncheckedUpdateWithoutBusinessInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
   resetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  deals?: Prisma.DealUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutBusinessInput = {
@@ -629,6 +852,8 @@ export type UserUncheckedUpdateManyWithoutBusinessInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  quota?: Prisma.FloatFieldUpdateOperationsInput | number
+  performanceChange?: Prisma.FloatFieldUpdateOperationsInput | number
 }
 
 
@@ -638,10 +863,12 @@ export type UserUncheckedUpdateManyWithoutBusinessInput = {
 
 export type UserCountOutputType = {
   resetTokens: number
+  deals: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   resetTokens?: boolean | UserCountOutputTypeCountResetTokensArgs
+  deals?: boolean | UserCountOutputTypeCountDealsArgs
 }
 
 /**
@@ -661,6 +888,13 @@ export type UserCountOutputTypeCountResetTokensArgs<ExtArgs extends runtime.Type
   where?: Prisma.PasswordResetTokenWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DealWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -671,8 +905,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   businessId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  quota?: boolean
+  performanceChange?: boolean
   business?: boolean | Prisma.User$businessArgs<ExtArgs>
   resetTokens?: boolean | Prisma.User$resetTokensArgs<ExtArgs>
+  deals?: boolean | Prisma.User$dealsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -685,6 +922,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   businessId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  quota?: boolean
+  performanceChange?: boolean
   business?: boolean | Prisma.User$businessArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -697,6 +936,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   businessId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  quota?: boolean
+  performanceChange?: boolean
   business?: boolean | Prisma.User$businessArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -709,12 +950,15 @@ export type UserSelectScalar = {
   businessId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  quota?: boolean
+  performanceChange?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "role" | "businessId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "password" | "role" | "businessId" | "createdAt" | "updatedAt" | "quota" | "performanceChange", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   business?: boolean | Prisma.User$businessArgs<ExtArgs>
   resetTokens?: boolean | Prisma.User$resetTokensArgs<ExtArgs>
+  deals?: boolean | Prisma.User$dealsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -729,6 +973,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     business: Prisma.$BusinessPayload<ExtArgs> | null
     resetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
+    deals: Prisma.$DealPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -739,6 +984,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     businessId: string | null
     createdAt: Date
     updatedAt: Date
+    quota: number
+    performanceChange: number
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1135,6 +1382,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   business<T extends Prisma.User$businessArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$businessArgs<ExtArgs>>): Prisma.Prisma__BusinessClient<runtime.Types.Result.GetResult<Prisma.$BusinessPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   resetTokens<T extends Prisma.User$resetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$resetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deals<T extends Prisma.User$dealsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$dealsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1172,6 +1420,8 @@ export interface UserFieldRefs {
   readonly businessId: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly quota: Prisma.FieldRef<"User", 'Float'>
+  readonly performanceChange: Prisma.FieldRef<"User", 'Float'>
 }
     
 
@@ -1613,6 +1863,30 @@ export type User$resetTokensArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.PasswordResetTokenScalarFieldEnum | Prisma.PasswordResetTokenScalarFieldEnum[]
+}
+
+/**
+ * User.deals
+ */
+export type User$dealsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Deal
+   */
+  select?: Prisma.DealSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Deal
+   */
+  omit?: Prisma.DealOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DealInclude<ExtArgs> | null
+  where?: Prisma.DealWhereInput
+  orderBy?: Prisma.DealOrderByWithRelationInput | Prisma.DealOrderByWithRelationInput[]
+  cursor?: Prisma.DealWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DealScalarFieldEnum | Prisma.DealScalarFieldEnum[]
 }
 
 /**

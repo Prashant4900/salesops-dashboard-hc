@@ -148,11 +148,11 @@ export function SettingsSection() {
   // Derive initials from current session
   const initials = session?.name
     ? session.name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .substring(0, 2)
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2)
     : (session?.email?.substring(0, 2).toUpperCase() ?? "??")
 
   return (
@@ -309,7 +309,7 @@ export function SettingsSection() {
                       Add Member
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[425px]">
+                  <DialogContent className="sm:max-w-106.25">
                     <DialogHeader>
                       <DialogTitle>Add Team Member</DialogTitle>
                       <DialogDescription>
@@ -425,10 +425,10 @@ export function SettingsSection() {
                             <AvatarFallback className="bg-accent text-accent-foreground text-sm font-semibold">
                               {member.name
                                 ? member.name
-                                    .split(" ")
-                                    .map((n) => n[0])
-                                    .join("")
-                                    .substring(0, 2)
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")
+                                  .substring(0, 2)
                                 : member.email.substring(0, 2).toUpperCase()}
                             </AvatarFallback>
                           </Avatar>

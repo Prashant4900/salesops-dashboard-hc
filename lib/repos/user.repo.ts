@@ -52,6 +52,8 @@ export const userRepo = {
         name: true,
         email: true,
         role: true,
+        quota: true,
+        performanceChange: true,
         createdAt: true,
       },
       orderBy: { createdAt: "asc" },

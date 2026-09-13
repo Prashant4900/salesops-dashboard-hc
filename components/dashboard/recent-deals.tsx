@@ -1,5 +1,6 @@
 "use client"
 
+import { formatDistanceToNow } from "date-fns"
 import { ArrowUpRight, CheckCircle2, Clock, XCircle } from "lucide-react"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
@@ -11,44 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
-const deals = [
-  {
-    company: "Acme Corp",
-    value: "$125,000",
-    status: "won",
-    date: "2 hours ago",
-    rep: "Sarah Chen",
-  },
-  {
-    company: "TechStart Inc",
-    value: "$89,500",
-    status: "pending",
-    date: "5 hours ago",
-    rep: "Mike Johnson",
-  },
-  {
-    company: "GlobalFin",
-    value: "$245,000",
-    status: "pending",
-    date: "1 day ago",
-    rep: "Emily Davis",
-  },
-  {
-    company: "DataSync Solutions",
-    value: "$67,800",
-    status: "lost",
-    date: "2 days ago",
-    rep: "James Wilson",
-  },
-  {
-    company: "CloudBase Ltd",
-    value: "$178,000",
-    status: "won",
-    date: "3 days ago",
-    rep: "Sarah Chen",
-  },
-]
+import { useRecentDeals } from "@/hooks/use-deals"
 
 const statusConfig = {
   won: {
@@ -72,6 +36,26 @@ const statusConfig = {
 }
 
 export function RecentDeals() {
+  const { data: deals = [], isLoading } = useRecentDeals()
+
+  if (isLoading) {
+    return (
+      <Card className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
+        <CardHeader className="flex flex-row items-center justify-between pb-2 mb-3 space-y-0">
+          <div>
+            <CardTitle className="text-base">Recent Deals</CardTitle>
+            <CardDescription className="mt-0.5">
+              Latest activity
+            </CardDescription>
+          </div>
+        </CardHeader>
+        <CardContent className="h-40 flex items-center justify-center text-muted-foreground text-sm">
+          Loading deals...
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
       <CardHeader className="flex flex-row items-center justify-between pb-2 mb-3 space-y-0">
@@ -115,14 +99,17 @@ export function RecentDeals() {
                     {deal.company}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {deal.rep} • {deal.date}
+                    {deal.rep} •{" "}
+                    {formatDistanceToNow(new Date(deal.updatedAt), {
+                      addSuffix: true,
+                    })}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
                 <span className="text-sm font-semibold text-foreground">
-                  {deal.value}
+                  ${(deal.value / 1000).toFixed(1)}k
                 </span>
                 <Badge
                   variant={
@@ -140,6 +127,11 @@ export function RecentDeals() {
             </div>
           )
         })}
+        {deals.length === 0 && (
+          <div className="text-center py-4 text-sm text-muted-foreground bg-accent/5 rounded-lg border border-border border-dashed">
+            No recent deals.
+          </div>
+        )}
       </CardContent>
     </Card>
   )

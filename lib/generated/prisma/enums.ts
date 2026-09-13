@@ -16,3 +16,24 @@ export const Role = {
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
+
+
+export const DealStatus = {
+  PENDING: 'PENDING',
+  WON: 'WON',
+  LOST: 'LOST'
+} as const
+
+export type DealStatus = (typeof DealStatus)[keyof typeof DealStatus]
+
+
+export const DealStage = {
+  LEAD: 'LEAD',
+  QUALIFIED: 'QUALIFIED',
+  PROPOSAL: 'PROPOSAL',
+  NEGOTIATION: 'NEGOTIATION',
+  CLOSED_WON: 'CLOSED_WON',
+  CLOSED_LOST: 'CLOSED_LOST'
+} as const
+
+export type DealStage = (typeof DealStage)[keyof typeof DealStage]

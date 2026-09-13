@@ -94,6 +94,19 @@ export type AddTeamMemberInput = {
   role: string
 }
 
+export type TeamPerformanceMember = {
+  id: string
+  name: string
+  role: string
+  email: string
+  avatar: string
+  deals: number
+  revenue: number
+  quota: number
+  change: number
+  rank: number
+}
+
 export const teamApi = {
   getMembers: (): Promise<{ members: TeamMember[] }> =>
     request("/api/team", "GET"),
@@ -106,4 +119,80 @@ export const teamApi = {
 
   removeMember: (id: string): Promise<{ ok: boolean }> =>
     request(`/api/team/${id}`, "DELETE"),
+
+  getPerformance: (): Promise<{ performance: TeamPerformanceMember[] }> =>
+    request("/api/team/performance", "GET"),
+}
+
+// ── Deals endpoints ────────────────────────────────────────────────────────
+
+export type DealStatus = "won" | "pending" | "lost"
+
+export type DealStage =
+  | "lead"
+  | "qualified"
+  | "proposal"
+  | "negotiation"
+  | "closed_won"
+  | "closed_lost"
+
+export type Deal = {
+  id: string
+  companyName: string
+  value: number
+  status: DealStatus
+  stage: DealStage
+  probability: number
+  daysInStage: number
+  closedAt: string | null
+  createdAt: string
+  updatedAt: string
+  userId: string
+  businessId: string
+  rep: string
+  repAvatar: string
+}
+
+export type RecentDeal = {
+  id: string
+  company: string
+  value: number
+  status: string
+  updatedAt: string
+  rep: string
+  repAvatar: string
+}
+
+export type CreateDealInput = {
+  companyName: string
+  value: number
+  status?: "WON" | "PENDING" | "LOST"
+  stage?:
+    | "LEAD"
+    | "QUALIFIED"
+    | "PROPOSAL"
+    | "NEGOTIATION"
+    | "CLOSED_WON"
+    | "CLOSED_LOST"
+  probability?: number
+  assignedUserId: string
+  closedAt?: string | null
+}
+
+export type UpdateDealInput = Partial<CreateDealInput>
+
+export const dealsApi = {
+  getAll: (): Promise<{ deals: Deal[] }> => request("/api/deals", "GET"),
+
+  getRecent: (): Promise<{ deals: RecentDeal[] }> =>
+    request("/api/deals/recent", "GET"),
+
+  create: (input: CreateDealInput): Promise<{ deal: Deal }> =>
+    post("/api/deals", input),
+
+  update: (id: string, input: UpdateDealInput): Promise<{ deal: Deal }> =>
+    patch(`/api/deals/${id}`, input),
+
+  delete: (id: string): Promise<{ ok: boolean }> =>
+    request(`/api/deals/${id}`, "DELETE"),
 }
