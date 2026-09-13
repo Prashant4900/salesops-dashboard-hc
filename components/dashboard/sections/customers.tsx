@@ -150,7 +150,7 @@ function CustomerFormDialog({ open, onClose, customer }: CustomerFormDialogProps
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-[560px] bg-card border-border">
+      <DialogContent className="sm:max-w-140 bg-card border-border">
         <DialogHeader>
           <DialogTitle className="text-foreground">
             {isEditing ? "Edit Customer" : "Add New Customer"}
@@ -376,7 +376,7 @@ function DeleteCustomerDialog({ open, onClose, customer }: DeleteDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
-      <DialogContent className="sm:max-w-[400px] bg-card border-border">
+      <DialogContent className="sm:max-w-100 bg-card border-border">
         <DialogHeader>
           <DialogTitle className="text-foreground">Delete Customer</DialogTitle>
           <DialogDescription className="text-muted-foreground">
@@ -467,9 +467,9 @@ export function CustomersSection() {
   const avgHealthScore =
     customers.length > 0
       ? Math.round(
-          customers.reduce((acc, c) => acc + c.healthScore, 0) /
-            customers.length,
-        )
+        customers.reduce((acc, c) => acc + c.healthScore, 0) /
+        customers.length,
+      )
       : 0
   const totalActiveDeals = customers.reduce((acc, c) => acc + c.activeDeals, 0)
 
@@ -536,7 +536,7 @@ export function CustomersSection() {
               placeholder="Search customers..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-[280px] bg-secondary border-border focus:border-accent"
+              className="pl-10 w-70 bg-secondary border-border focus:border-accent"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -695,13 +695,12 @@ export function CustomersSection() {
                         />
                       </div>
                       <span
-                        className={`text-sm font-semibold ${
-                          customer.healthScore >= 80
+                        className={`text-sm font-semibold ${customer.healthScore >= 80
                             ? "text-accent"
                             : customer.healthScore >= 60
                               ? "text-chart-3"
                               : "text-destructive"
-                        }`}
+                          }`}
                       >
                         {customer.healthScore}%
                       </span>

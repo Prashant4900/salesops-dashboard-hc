@@ -2,17 +2,18 @@
 
 import {
   BarChart3,
-  Calendar,
-  ChevronRight,
-  Clock,
+  DollarSign,
   Download,
-  FileText,
+  Handshake,
   PieChart as PieChartIcon,
+  RefreshCw,
+  Target,
+  TrendingDown,
   TrendingUp,
 } from "lucide-react"
-import type React from "react"
-import { useEffect, useState } from "react"
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
   Cell,
   Line,
@@ -24,361 +25,639 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useReports } from "@/hooks/use-reports"
+import { useQueryClient } from "@tanstack/react-query"
 
-const conversionData = [
-  { month: "Jan", rate: 18 },
-  { month: "Feb", rate: 22 },
-  { month: "Mar", rate: 19 },
-  { month: "Apr", rate: 25 },
-  { month: "May", rate: 23 },
-  { month: "Jun", rate: 28 },
-  { month: "Jul", rate: 26 },
-  { month: "Aug", rate: 31 },
-  { month: "Sep", rate: 29 },
-  { month: "Oct", rate: 32 },
-  { month: "Nov", rate: 35 },
-  { month: "Dec", rate: 38 },
-]
+// ── Skeleton helpers ───────────────────────────────────────────────────────
 
-const sourceData = [
-  { name: "Direct", value: 35, color: "oklch(0.7 0.18 220)" },
-  { name: "Referral", value: 25, color: "oklch(0.7 0.18 145)" },
-  { name: "Organic", value: 20, color: "oklch(0.75 0.18 55)" },
-  { name: "Paid Ads", value: 15, color: "oklch(0.65 0.2 25)" },
-  { name: "Social", value: 5, color: "oklch(0.7 0.15 300)" },
-]
-
-const reports = [
-  {
-    id: "1",
-    name: "Monthly Sales Summary",
-    type: "Sales",
-    date: "Jan 20, 2024",
-    status: "ready",
-  },
-  {
-    id: "2",
-    name: "Q4 Performance Analysis",
-    type: "Performance",
-    date: "Jan 18, 2024",
-    status: "ready",
-  },
-  {
-    id: "3",
-    name: "Pipeline Forecast",
-    type: "Forecast",
-    date: "Jan 15, 2024",
-    status: "ready",
-  },
-  {
-    id: "4",
-    name: "Team Productivity Report",
-    type: "Team",
-    date: "Jan 12, 2024",
-    status: "generating",
-  },
-  {
-    id: "5",
-    name: "Lead Source Analysis",
-    type: "Marketing",
-    date: "Jan 10, 2024",
-    status: "ready",
-  },
-]
-
-function ReportCard({
-  title,
-  description,
-  icon: Icon,
-  color,
-  index,
-}: {
-  title: string
-  description: string
-  icon: React.ElementType
-  color: string
-  index: number
-}) {
+function StatSkeleton() {
   return (
-    <Card
-      className="group p-5 hover:border-accent/50 cursor-pointer transition-all duration-300 animate-in fade-in slide-in-from-bottom-4"
-      style={{ animationDelay: `${index * 100}ms`, animationFillMode: "both" }}
-    >
-      <CardContent className="p-0">
-        <div
-          className={cn(
-            "w-10 h-10 rounded-lg flex items-center justify-center mb-4",
-            color,
-          )}
-        >
-          <Icon className="w-5 h-5" />
-        </div>
-        <h3 className="text-sm font-semibold text-foreground mb-1">{title}</h3>
-        <p className="text-xs text-muted-foreground mb-4">{description}</p>
-        <Button
-          variant="link"
-          type="button"
-          className="flex items-center gap-1 h-auto p-0 text-xs text-accent font-medium group-hover:gap-2 transition-all duration-200"
-        >
-          View Report
-          <ChevronRight className="w-3 h-3" />
-        </Button>
+    <Card className="border-border bg-card">
+      <CardContent className="p-4 space-y-2">
+        <Skeleton className="h-3 w-24" />
+        <Skeleton className="h-8 w-28" />
+        <Skeleton className="h-3 w-20" />
       </CardContent>
     </Card>
   )
 }
 
-export function ReportsSection() {
-  const [chartsLoaded, setChartsLoaded] = useState(false)
+function ChartSkeleton({ height = 240 }: { height?: number }) {
+  return (
+    <div className="flex items-end gap-2 px-2 pb-4" style={{ height }}>
+      {Array.from({ length: 12 }).map((_, i) => (
+        <Skeleton
+          key={i}
+          className="flex-1 rounded-t-sm"
+          style={{ height: `${25 + Math.random() * 65}%` }}
+        />
+      ))}
+    </div>
+  )
+}
 
-  useEffect(() => {
-    const timer = setTimeout(() => setChartsLoaded(true), 400)
-    return () => clearTimeout(timer)
-  }, [])
+// ── Tooltip style ──────────────────────────────────────────────────────────
+
+const tooltipStyle = {
+  backgroundColor: "oklch(0.12 0.005 260)",
+  border: "1px solid oklch(0.22 0.005 260)",
+  borderRadius: "8px",
+  color: "oklch(0.95 0 0)",
+  fontSize: "12px",
+}
+
+// ── Main Component ─────────────────────────────────────────────────────────
+
+export function ReportsSection() {
+  const queryClient = useQueryClient()
+  const { data, isLoading, isFetching } = useReports()
+
+  function handleRefresh() {
+    queryClient.invalidateQueries({ queryKey: ["reports"] })
+  }
+
+  function handleExportCSV() {
+    if (!data) return
+    const rows: (string | number)[][] = [
+      ["SalesOps Analytics Report", new Date().toLocaleDateString()],
+      [],
+      ["Summary KPIs"],
+      ["Total Revenue ($)", data.summary.totalRevenue],
+      ["Total Deals", data.summary.totalDeals],
+      ["Win Rate (%)", data.summary.winRate],
+      ["Avg Deal Size ($)", data.summary.avgDealSize],
+      ["Active Deals", data.summary.openDeals],
+      ["Open Pipeline Value ($)", data.summary.openPipelineValue],
+      [],
+      ["Pipeline by Stage"],
+      ["Stage", "Deals", "Value ($)"],
+      ...data.stageData.map((s) => [s.name, s.count, s.value]),
+      [],
+      ["Monthly Conversion Trend"],
+      ["Month", "Won Deals", "Lost Deals", "Conversion Rate (%)"],
+      ...data.conversionData.map((c) => [
+        c.month,
+        c.won,
+        c.lost,
+        c.rate != null ? `${c.rate}%` : "N/A",
+      ]),
+      [],
+      ["Sales Rep Performance"],
+      ["Rep", "Won Revenue ($)", "Open Pipeline ($)", "Deals"],
+      ...data.repData.map((r) => [r.name, r.won, r.pipeline, r.deals]),
+    ]
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      rows.map((row) => row.map((val) => `"${val}"`).join(",")).join("\n")
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement("a")
+    link.setAttribute("href", encodedUri)
+    link.setAttribute(
+      "download",
+      `salesops-report-${new Date().toISOString().slice(0, 10)}.csv`,
+    )
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const summary = data?.summary
+  const conversionData = data?.conversionData ?? []
+  const stageData = data?.stageData ?? []
+  const repData = data?.repData ?? []
+  const winLossData = data?.winLossData ?? []
+
+  const summaryCards = summary
+    ? [
+      {
+        label: "Total Revenue",
+        value:
+          summary.totalRevenue >= 1_000_000
+            ? `$${(summary.totalRevenue / 1_000_000).toFixed(2)}M`
+            : `$${Math.round(summary.totalRevenue / 1000)}K`,
+        sub: "Closed won deals",
+        icon: DollarSign,
+        up: true,
+      },
+      {
+        label: "Win Rate",
+        value: `${summary.winRate}%`,
+        sub: `${data?.winLossData.find((d) => d.name === "Won")?.value ?? 0} won · ${data?.winLossData.find((d) => d.name === "Lost")?.value ?? 0} lost`,
+        icon: Target,
+        up: summary.winRate >= 50,
+      },
+      {
+        label: "Avg Deal Size",
+        value:
+          summary.avgDealSize >= 1_000_000
+            ? `$${(summary.avgDealSize / 1_000_000).toFixed(1)}M`
+            : `$${Math.round(summary.avgDealSize / 1000)}K`,
+        sub: "Closed won only",
+        icon: Handshake,
+        up: true,
+      },
+      {
+        label: "Open Pipeline",
+        value:
+          summary.openPipelineValue >= 1_000_000
+            ? `$${(summary.openPipelineValue / 1_000_000).toFixed(1)}M`
+            : `$${Math.round(summary.openPipelineValue / 1000)}K`,
+        sub: `${summary.openDeals} active deals`,
+        icon: BarChart3,
+        up: summary.openDeals > 0,
+      },
+    ]
+    : null
+
+  // Conversion trend label — compare first half vs second half
+  const withData = conversionData.filter((d) => d.rate !== null)
+  const firstHalf = withData.slice(0, Math.ceil(withData.length / 2))
+  const secondHalf = withData.slice(Math.ceil(withData.length / 2))
+  const avgFirst =
+    firstHalf.length > 0
+      ? firstHalf.reduce((a, d) => a + d.rate!, 0) / firstHalf.length
+      : 0
+  const avgSecond =
+    secondHalf.length > 0
+      ? secondHalf.reduce((a, d) => a + d.rate!, 0) / secondHalf.length
+      : 0
+  const convTrend =
+    avgFirst > 0
+      ? Math.round(((avgSecond - avgFirst) / avgFirst) * 100)
+      : 0
 
   return (
     <div className="space-y-6">
-      {/* Quick report cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <ReportCard
-          title="Sales Summary"
-          description="Monthly revenue and deal metrics"
-          icon={BarChart3}
-          color="bg-chart-1/10 text-chart-1"
-          index={0}
-        />
-        <ReportCard
-          title="Conversion Rates"
-          description="Funnel performance analysis"
-          icon={TrendingUp}
-          color="bg-accent/10 text-accent"
-          index={1}
-        />
-        <ReportCard
-          title="Lead Sources"
-          description="Channel attribution breakdown"
-          icon={PieChartIcon}
-          color="bg-chart-3/10 text-chart-3"
-          index={2}
-        />
-        <ReportCard
-          title="Forecast"
-          description="Revenue predictions & targets"
-          icon={Calendar}
-          color="bg-chart-5/10 text-chart-5"
-          index={3}
-        />
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold text-foreground">
+            Reports & Analytics
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1">
+            Live insights derived from your deals and pipeline
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportCSV}
+            disabled={isLoading || !data}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export CSV
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefresh}
+            disabled={isFetching}
+          >
+            <RefreshCw
+              className={`w-4 h-4 mr-2 ${isFetching ? "animate-spin" : ""}`}
+            />
+            {isFetching ? "Refreshing..." : "Refresh"}
+          </Button>
+        </div>
       </div>
 
-      {/* Charts row */}
+      {/* Summary KPIs */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {isLoading || !summaryCards
+          ? Array.from({ length: 4 }).map((_, i) => <StatSkeleton key={i} />)
+          : summaryCards.map((stat, i) => (
+            <Card
+              key={stat.label}
+              className="border-border bg-card hover:border-muted-foreground/30 transition-all duration-300"
+              style={{ animationDelay: `${i * 75}ms` }}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">
+                      {stat.label}
+                    </p>
+                    <p className="text-2xl font-semibold text-foreground mt-1">
+                      {stat.value}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {stat.sub}
+                    </p>
+                  </div>
+                  <stat.icon
+                    className={`w-8 h-8 opacity-40 ${stat.up ? "text-accent" : "text-destructive"}`}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+      </div>
+
+      {/* Charts Row 1 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Conversion rate trend */}
-        <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-200">
-          <CardContent className="p-0">
-            <div className="flex items-center justify-between mb-6">
+        {/* Conversion Rate Trend */}
+        <Card className="border-border bg-card">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-foreground">
+                <CardTitle className="text-base font-medium">
                   Conversion Rate Trend
-                </h3>
-                <p className="text-sm text-muted-foreground mt-0.5">
-                  Monthly lead to deal conversion
+                </CardTitle>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Won ÷ (Won + Lost) per month
                 </p>
               </div>
-              <div className="flex items-center gap-2 text-sm text-success font-medium">
-                <TrendingUp className="w-4 h-4" />
-                +111% YoY
-              </div>
-            </div>
-            <div
-              className={`h-62.5 transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
-            >
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={conversionData}
-                  margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+              {!isLoading && withData.length >= 2 && (
+                <Badge
+                  variant="outline"
+                  className={
+                    convTrend >= 0
+                      ? "text-accent border-accent/30"
+                      : "text-destructive border-destructive/30"
+                  }
                 >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="oklch(0.22 0.005 260)"
-                    vertical={false}
-                  />
-                  <XAxis
-                    dataKey="month"
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
-                    dy={10}
-                  />
-                  <YAxis
-                    axisLine={false}
-                    tickLine={false}
-                    tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
-                    tickFormatter={(value) => `${value}%`}
-                    dx={-10}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "oklch(0.12 0.005 260)",
-                      border: "1px solid oklch(0.22 0.005 260)",
-                      borderRadius: "8px",
-                      fontSize: "12px",
-                    }}
-                    labelStyle={{ color: "oklch(0.95 0 0)", fontWeight: 600 }}
-                    formatter={(value: number) => [
-                      `${value}%`,
-                      "Conversion Rate",
-                    ]}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="rate"
-                    stroke="oklch(0.7 0.18 145)"
-                    strokeWidth={2}
-                    dot={false}
-                    activeDot={{ r: 4, strokeWidth: 2 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+                  {convTrend >= 0 ? (
+                    <TrendingUp className="w-3 h-3 mr-1" />
+                  ) : (
+                    <TrendingDown className="w-3 h-3 mr-1" />
+                  )}
+                  {convTrend >= 0 ? "+" : ""}
+                  {convTrend}% trend
+                </Badge>
+              )}
             </div>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <ChartSkeleton height={220} />
+            ) : (
+              <div className="h-55">
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart
+                    data={conversionData}
+                    margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="oklch(0.22 0.005 260)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="month"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
+                      dy={10}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
+                      tickFormatter={(v) => `${v}%`}
+                      dx={-10}
+                      domain={[0, 100]}
+                    />
+                    <Tooltip
+                      contentStyle={tooltipStyle}
+                      labelStyle={{ color: "oklch(0.95 0 0)", fontWeight: 600 }}
+                      formatter={(value: any) => [
+                        value != null ? `${value}%` : "No data",
+                        "Conversion Rate",
+                      ]}
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="rate"
+                      stroke="oklch(0.7 0.18 145)"
+                      strokeWidth={2.5}
+                      dot={{ r: 3, fill: "oklch(0.7 0.18 145)", strokeWidth: 0 }}
+                      activeDot={{ r: 5, strokeWidth: 2 }}
+                      connectNulls={false}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* Lead sources pie chart */}
-        <Card className="p-5 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-300">
-          <CardContent className="p-0">
-            <div className="mb-6">
-              <h3 className="text-base font-semibold text-foreground">
-                Lead Sources
-              </h3>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                Where your leads come from
-              </p>
-            </div>
-            <div className="flex items-center gap-8">
-              <div
-                className={`w-45 h-45 transition-opacity duration-700 ${chartsLoaded ? "opacity-100" : "opacity-0"}`}
-              >
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={sourceData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={50}
-                      outerRadius={80}
-                      paddingAngle={2}
-                      dataKey="value"
-                    >
-                      {sourceData.map((entry) => (
-                        <Cell key={entry.name} fill={entry.color} />
-                      ))}
-                    </Pie>
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              <div className="flex-1 space-y-3">
-                {sourceData.map((source, index) => (
-                  <div
-                    key={source.name}
-                    className="flex items-center justify-between animate-in fade-in slide-in-from-right-2"
-                    style={{
-                      animationDelay: `${(index + 5) * 100}ms`,
-                      animationFillMode: "both",
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-3 h-3 rounded-full"
-                        style={{ backgroundColor: source.color }}
-                      />
-                      <span className="text-sm text-foreground">
-                        {source.name}
-                      </span>
+        {/* Win / Loss Breakdown (Pie) */}
+        <Card className="border-border bg-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-medium">
+              Deal Outcome Breakdown
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">
+              All deals by status
+            </p>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="flex items-center gap-6">
+                <Skeleton className="w-44 h-44 rounded-full shrink-0" />
+                <div className="flex-1 space-y-3">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <Skeleton className="h-3 w-16" />
+                      <Skeleton className="h-3 w-12" />
                     </div>
-                    <span className="text-sm font-semibold text-foreground">
-                      {source.value}%
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center gap-6">
+                <div className="w-44 h-44 shrink-0">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={winLossData}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={52}
+                        outerRadius={78}
+                        paddingAngle={3}
+                        dataKey="value"
+                      >
+                        {winLossData.map((entry) => (
+                          <Cell key={entry.name} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={tooltipStyle}
+                        formatter={(value: any, name: any) => [
+                          `${value} deals`,
+                          name,
+                        ]}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex-1 space-y-3">
+                  {winLossData.map((item) => (
+                    <div
+                      key={item.name}
+                      className="flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="w-3 h-3 rounded-full shrink-0"
+                          style={{ backgroundColor: item.color }}
+                        />
+                        <span className="text-sm text-foreground">
+                          {item.name}
+                        </span>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-foreground">
+                          {item.value} deals
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          $
+                          {item.amount >= 1_000_000
+                            ? `${(item.amount / 1_000_000).toFixed(1)}M`
+                            : `${Math.round(item.amount / 1000)}K`}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
 
-      {/* Recent reports table */}
-      <Card className="overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-400">
-        <CardContent className="p-0">
-          <div className="flex items-center justify-between p-5 border-b border-border">
-            <div>
-              <h3 className="text-base font-semibold text-foreground">
-                Recent Reports
-              </h3>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                Your generated reports
-              </p>
-            </div>
-            <Button
-              variant="secondary"
-              size="sm"
-              type="button"
-              className="flex items-center gap-2 px-3 py-1.5 h-8 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
-            >
-              <FileText className="w-4 h-4" />
-              Generate New
-            </Button>
-          </div>
-          <div className="divide-y divide-border">
-            {reports.map((report, index) => (
-              <div
-                key={report.id}
-                className="flex items-center justify-between px-5 py-4 hover:bg-secondary/30 transition-colors duration-150 cursor-pointer animate-in fade-in slide-in-from-left-2"
-                style={{
-                  animationDelay: `${(index + 6) * 50}ms`,
-                  animationFillMode: "both",
-                }}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
-                    <FileText className="w-5 h-5 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      {report.name}
-                    </p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <span className="px-1.5 py-0.5 rounded bg-secondary">
-                        {report.type}
-                      </span>
-                      <span>•</span>
-                      <span>{report.date}</span>
-                    </div>
-                  </div>
+      {/* Charts Row 2 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Revenue by Stage */}
+        <Card className="border-border bg-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-medium">
+              Revenue by Pipeline Stage
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Total deal value at each stage
+            </p>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <ChartSkeleton height={220} />
+            ) : (
+              <div className="h-55">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={stageData}
+                    margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="oklch(0.22 0.005 260)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "oklch(0.65 0 0)", fontSize: 11 }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "oklch(0.65 0 0)", fontSize: 11 }}
+                      tickFormatter={(v) =>
+                        v >= 1_000_000
+                          ? `$${(v / 1_000_000).toFixed(1)}M`
+                          : `$${Math.round(v / 1000)}K`
+                      }
+                    />
+                    <Tooltip
+                      contentStyle={tooltipStyle}
+                      formatter={(value: any, name: any, props: any) => [
+                        typeof value === "number" && value >= 1_000_000
+                          ? `$${(value / 1_000_000).toFixed(2)}M`
+                          : typeof value === "number"
+                            ? `$${value.toLocaleString()}`
+                            : `${value}`,
+                        props?.payload?.count != null
+                          ? `${props.payload.count} deals`
+                          : String(name),
+                      ]}
+                    />
+                    <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                      {stageData.map((entry) => (
+                        <Cell key={entry.name} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Revenue by Rep */}
+        <Card className="border-border bg-card">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-medium">
+              Revenue by Rep
+            </CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Won revenue vs open pipeline per rep
+            </p>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <ChartSkeleton height={220} />
+            ) : repData.length === 0 ? (
+              <div className="h-55 flex items-center justify-center text-muted-foreground text-sm">
+                No deal data yet
+              </div>
+            ) : (
+              <div className="h-55">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={repData}
+                    margin={{ top: 5, right: 5, left: 0, bottom: 5 }}
+                    barGap={2}
+                  >
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="oklch(0.22 0.005 260)"
+                      vertical={false}
+                    />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "oklch(0.65 0 0)", fontSize: 12 }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fill: "oklch(0.65 0 0)", fontSize: 11 }}
+                      tickFormatter={(v) =>
+                        v >= 1_000_000
+                          ? `$${(v / 1_000_000).toFixed(1)}M`
+                          : `$${Math.round(v / 1000)}K`
+                      }
+                    />
+                    <Tooltip
+                      contentStyle={tooltipStyle}
+                      formatter={(value: any, name: any) => [
+                        typeof value === "number" && value >= 1_000_000
+                          ? `$${(value / 1_000_000).toFixed(2)}M`
+                          : typeof value === "number"
+                            ? `$${value.toLocaleString()}`
+                            : `${value}`,
+                        name,
+                      ]}
+                    />
+                    <Bar
+                      dataKey="won"
+                      name="Won"
+                      stackId="a"
+                      fill="oklch(0.7 0.18 145)"
+                      radius={[0, 0, 0, 0]}
+                    />
+                    <Bar
+                      dataKey="pipeline"
+                      name="Pipeline"
+                      stackId="a"
+                      fill="oklch(0.7 0.18 220)"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            )}
+            {!isLoading && repData.length > 0 && (
+              <div className="flex items-center gap-4 mt-3 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "oklch(0.7 0.18 145)" }} />
+                  Won
                 </div>
-                <div className="flex items-center gap-3">
-                  {report.status === "generating" ? (
-                    <div className="flex items-center gap-2 text-xs text-warning">
-                      <Clock className="w-4 h-4 animate-pulse" />
-                      Generating...
-                    </div>
-                  ) : (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      type="button"
-                      className="flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-secondary transition-all duration-200"
-                    >
-                      <Download className="w-4 h-4" />
-                      Download
-                    </Button>
-                  )}
+                <div className="flex items-center gap-1.5">
+                  <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: "oklch(0.7 0.18 220)" }} />
+                  Open Pipeline
                 </div>
               </div>
-            ))}
-          </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Stage detail table */}
+      <Card className="border-border bg-card overflow-hidden">
+        <CardHeader className="pb-2 border-b border-border">
+          <CardTitle className="text-base font-medium">
+            Pipeline Stage Breakdown
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {isLoading ? (
+            <div className="divide-y divide-border">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex items-center justify-between px-5 py-3">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="w-3 h-3 rounded-full" />
+                    <Skeleton className="h-3 w-24" />
+                  </div>
+                  <div className="flex items-center gap-8">
+                    <Skeleton className="h-3 w-12" />
+                    <Skeleton className="h-3 w-16" />
+                    <Skeleton className="h-2 w-24 rounded-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="divide-y divide-border">
+              {stageData.map((stage) => {
+                const maxValue = Math.max(...stageData.map((s) => s.value), 1)
+                const pct = Math.round((stage.value / maxValue) * 100)
+                return (
+                  <div
+                    key={stage.name}
+                    className="flex items-center justify-between px-5 py-3 hover:bg-secondary/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 w-28">
+                      <div
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: stage.color }}
+                      />
+                      <span className="text-sm font-medium text-foreground">
+                        {stage.name}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-8 flex-1 justify-end">
+                      <span className="text-sm text-muted-foreground w-16 text-right">
+                        {stage.count} deal{stage.count !== 1 ? "s" : ""}
+                      </span>
+                      <span className="text-sm font-semibold text-foreground w-20 text-right">
+                        {stage.value >= 1_000_000
+                          ? `$${(stage.value / 1_000_000).toFixed(1)}M`
+                          : `$${Math.round(stage.value / 1000)}K`}
+                      </span>
+                      <div className="w-32 h-1.5 bg-secondary rounded-full overflow-hidden hidden sm:block">
+                        <div
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{
+                            width: `${pct}%`,
+                            backgroundColor: stage.color,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

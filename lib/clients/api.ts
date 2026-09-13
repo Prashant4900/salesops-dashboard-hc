@@ -252,3 +252,108 @@ export const customersApi = {
   delete: (id: string): Promise<{ ok: boolean }> =>
     request(`/api/customers/${id}`, "DELETE"),
 }
+
+// ── Forecasting endpoints ──────────────────────────────────────────────────
+
+export type ForecastMonthData = {
+  month: string
+  actual: number | null
+  forecast: number
+  target: number
+}
+
+export type QuarterlyForecast = {
+  quarter: string
+  committed: number
+  bestCase: number
+  pipeline: number
+}
+
+export type ForecastScenario = {
+  name: string
+  probability: number
+  revenue: number
+}
+
+export type RiskFactor = {
+  id: number
+  title: string
+  description: string
+  impact: string
+  severity: "high" | "medium"
+  deals: string[]
+}
+
+export type ForecastKpis = {
+  currentQuarterLabel: string
+  currentQuarterForecast: number
+  currentQuarterTarget: number
+  forecastAccuracy: number
+  pipelineCoverage: number
+  atRiskRevenue: number
+  atRiskCount: number
+}
+
+export type ForecastingData = {
+  forecastData: ForecastMonthData[]
+  quarterlyForecast: QuarterlyForecast[]
+  kpis: ForecastKpis
+  scenarios: ForecastScenario[]
+  riskFactors: RiskFactor[]
+}
+
+export const forecastingApi = {
+  getData: (): Promise<ForecastingData> => request("/api/forecasting", "GET"),
+}
+
+// ── Reports endpoints ──────────────────────────────────────────────────────
+
+export type ConversionDataPoint = {
+  month: string
+  rate: number | null
+  won: number
+  lost: number
+}
+
+export type StageDataPoint = {
+  name: string
+  value: number
+  count: number
+  color: string
+}
+
+export type RepDataPoint = {
+  name: string
+  won: number
+  pipeline: number
+  deals: number
+}
+
+export type WinLossDataPoint = {
+  name: string
+  value: number
+  amount: number
+  color: string
+}
+
+export type ReportSummary = {
+  totalRevenue: number
+  totalDeals: number
+  winRate: number
+  avgDealSize: number
+  openDeals: number
+  openPipelineValue: number
+}
+
+export type ReportsData = {
+  conversionData: ConversionDataPoint[]
+  avgConvRate: number
+  stageData: StageDataPoint[]
+  repData: RepDataPoint[]
+  winLossData: WinLossDataPoint[]
+  summary: ReportSummary
+}
+
+export const reportsApi = {
+  getData: (): Promise<ReportsData> => request("/api/reports", "GET"),
+}

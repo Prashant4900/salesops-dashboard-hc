@@ -11,32 +11,26 @@ import {
   YAxis,
 } from "recharts"
 import { Card } from "@/components/ui/card"
-
-const data = [
-  { month: "Jan", revenue: 186000, target: 180000 },
-  { month: "Feb", revenue: 205000, target: 190000 },
-  { month: "Mar", revenue: 237000, target: 200000 },
-  { month: "Apr", revenue: 273000, target: 220000 },
-  { month: "May", revenue: 209000, target: 230000 },
-  { month: "Jun", revenue: 314000, target: 250000 },
-  { month: "Jul", revenue: 352000, target: 270000 },
-  { month: "Aug", revenue: 389000, target: 290000 },
-  { month: "Sep", revenue: 421000, target: 310000 },
-  { month: "Oct", revenue: 458000, target: 330000 },
-  { month: "Nov", revenue: 492000, target: 350000 },
-  { month: "Dec", revenue: 547000, target: 380000 },
-]
+import { Skeleton } from "@/components/ui/skeleton"
+import { useForecasting } from "@/hooks/use-forecasting"
 
 export function RevenueChart() {
   const [isLoaded, setIsLoaded] = useState(false)
+  const { data: forecastData, isLoading } = useForecasting()
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 300)
     return () => clearTimeout(timer)
   }, [])
 
+  const data = forecastData?.forecastData.map((d) => ({
+    month: d.month,
+    revenue: d.actual != null && d.actual > 0 ? d.actual : d.forecast,
+    target: d.target,
+  })) ?? []
+
   return (
-    <Card className="p-5 h-95 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <Card className="p-5 h-95 animate-in fade-in slide-in-from-bottom-4 duration-500 flex flex-col justify-between">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-base font-semibold text-foreground">
@@ -58,9 +52,20 @@ export function RevenueChart() {
         </div>
       </div>
 
-      <div
-        className={`h-70 transition-opacity duration-700 ${isLoaded ? "opacity-100" : "opacity-0"}`}
-      >
+      {isLoading ? (
+        <div className="h-70 flex items-end gap-2 px-2 pb-4">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              className="flex-1 rounded-t-sm"
+              style={{ height: `${30 + (i % 5) * 12}%` }}
+            />
+          ))}
+        </div>
+      ) : (
+        <div
+          className={`h-70 transition-opacity duration-700 ${isLoaded ? "opacity-100" : "opacity-0"}`}
+        >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={data}
@@ -120,8 +125,8 @@ export function RevenueChart() {
               }}
               labelStyle={{ color: "oklch(0.95 0 0)", fontWeight: 600 }}
               itemStyle={{ color: "oklch(0.65 0 0)" }}
-              formatter={(value: number) => [
-                `$${(value / 1000).toFixed(0)}k`,
+              formatter={(value: any) => [
+                `$${(Number(value) / 1000).toFixed(0)}k`,
                 "",
               ]}
             />
@@ -144,6 +149,7 @@ export function RevenueChart() {
           </AreaChart>
         </ResponsiveContainer>
       </div>
+      )}
     </Card>
   )
 }

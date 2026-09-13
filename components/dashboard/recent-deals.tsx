@@ -81,7 +81,7 @@ export function RecentDeals() {
 
           return (
             <div
-              key={deal.company}
+              key={deal.id}
               className="group flex items-center justify-between p-3 rounded-lg hover:bg-secondary/50 transition-all duration-200 cursor-pointer animate-in fade-in slide-in-from-left-2"
               style={{
                 animationDelay: `${(index + 3) * 100}ms`,
